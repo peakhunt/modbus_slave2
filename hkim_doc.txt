@@ -1,0 +1,8 @@
+- start a electron/vue/vuetify project
+  a) vue create mbslavesim
+  b) cd mbslavesim
+  c) vue add electron-builder
+  d) vue add vuetify
+  e) npm run electron:serve
+
+- 
