@@ -16,18 +16,19 @@
     </v-toolbar>
 
     <v-content>
-      <HelloWorld/>
+      <ModbusSlaveSim/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+// import HelloWorld from './components/HelloWorld.vue';
+import ModbusSlaveSim from './components/ModbusSlaveSim.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    ModbusSlaveSim,
   },
   data() {
     return {

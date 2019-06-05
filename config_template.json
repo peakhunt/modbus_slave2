@@ -2,7 +2,7 @@
   "commPorts": [
     {
       "type": "rtu",
-      "config": {
+      "commParam": {
         "port": "/dev/ttyXXX",
         "baud": 38400,
         "parity": "none",
@@ -20,7 +20,7 @@
                   "type": "coil",
                   "address": 1000,
                   "desc": "blah blah blah",
-                  "value": false
+                  "initValue": false
                 }
               ]
             }
@@ -30,7 +30,7 @@
     },
     {
       "type": "tcp",
-      "config": {
+      "commParam": {
         "port": 10304
       },
       "slaves": [
@@ -44,7 +44,7 @@
                   "type": "coil",
                   "address": 1000,
                   "desc": "blah blah blah",
-                  "value": false
+                  "initValue": false
                 }
               ]
             }
