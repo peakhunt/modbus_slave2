@@ -2,10 +2,20 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>MODBUS &nbsp;</span>
+        <span class="font-weight-light">Slave Simulator</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+
+      <v-tooltip bottom>
+        <template #activator="data">
+          <v-btn icon v-on="data.on" @click="onNewCommPort">
+            <v-icon>add</v-icon>
+          </v-btn>
+        </template>
+        <span>New Communication Port</span>
+      </v-tooltip>
+
       <v-btn
         flat
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
@@ -22,7 +32,6 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue';
 import ModbusSlaveSim from './components/ModbusSlaveSim.vue';
 
 export default {
@@ -34,6 +43,11 @@ export default {
     return {
       //
     };
+  },
+  methods: {
+    onNewCommPort() {
+      this.$store.dispatch('commPortAddNew');
+    },
   },
 };
 </script>

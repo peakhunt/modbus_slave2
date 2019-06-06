@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import CommPort from './CommPort.vue';
 
 export default {
@@ -16,26 +17,13 @@ export default {
   components: {
     CommPort,
   },
+  computed: {
+    ...mapGetters([
+      'commPorts',
+    ]),
+  },
   data() {
     return {
-      commPorts: [
-        {
-          type: 'rtu',
-          commParam: {
-            port: '/dev/ttyUSB0',
-            baud: 38400,
-            parity: 'none',
-            dataBit: 8,
-            stopBit: 1,
-          },
-        },
-        {
-          type: 'tcp',
-          commParam: {
-            port: 11039,
-          },
-        },
-      ],
     };
   },
 };
