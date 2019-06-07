@@ -10,7 +10,7 @@
       <v-tooltip bottom>
         <template #activator="data">
           <v-btn icon v-on="data.on" @click="onNewCommPort">
-            <v-icon>add</v-icon>
+            <v-icon large>add</v-icon>
           </v-btn>
         </template>
         <span>New Communication Port</span>
