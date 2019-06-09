@@ -27,35 +27,60 @@
     </v-toolbar-items>
   </v-toolbar>
 
-  <v-expansion-panel expand>
-    <v-expansion-panel-content>
-      <div slot="header" >Config</div>
-      <CommPortConfig :commPort="commPort"/>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+  <CommPortConfig :commPort="commPort"/>
+
+  <v-tabs
+   v-model="active"
+   dark
+  >
+   <v-tab v-for="(slave, ndx) in commPort.slaves" :key="ndx">
+    Slave-{{slave.address}}
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn flat icon v-on="on" @click="onDelSlave(slave)">
+          <v-icon>clear</v-icon>
+        </v-btn>
+      </template>
+      <span>Delete slave</span>
+    </v-tooltip>
+
+   </v-tab>
+
+   <v-tab-item v-for="(slave, ndx) in commPort.slaves" :key="ndx">
+     <ModbusSlave :slave="slave"/>
+   </v-tab-item>
+  </v-tabs>
 </v-card>
 </template>
 
 <script>
 import CommPortConfig from './CommPortConfig.vue';
+import ModbusSlave from './ModbusSlave.vue';
 
 export default {
   name: 'CommPort',
   components: {
     CommPortConfig,
+    ModbusSlave,
   },
   props: {
     commPort: { type: Object },
   },
   data() {
     return {
+      active: null,
     };
   },
   methods: {
     onNewSlave() {
+      this.$store.dispatch('slaveAddNew', this.commPort);
     },
     onDelCommPort() {
       this.$store.dispatch('commPortDel', this.commPort);
+    },
+    onDelSlave(slave) {
+      this.$store.dispatch('slaveDel', { commPort: this.commPort, slave });
     },
   },
 };

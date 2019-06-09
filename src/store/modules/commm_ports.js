@@ -27,7 +27,7 @@ function setCommPortConfig(commPort, type) {
         port: serialPorts[0],
         baud: serialBauds[0],
         parity: serialParities[0],
-        dataBit: serialDatabits[0],
+        dataBit: serialDatabits[3],
         stopBit: serialStopbits[0],
       },
     };

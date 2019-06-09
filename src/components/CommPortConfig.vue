@@ -90,10 +90,13 @@ export default {
         return this.commPort.config.commParam.port;
       },
       set(value) {
+        const port = parseInt(value, 10);
+
+        if (Number.isNaN(port)) return;
         this.$store.commit('COMM_UPDATE_COMM_PARAM', {
           commPort: this.commPort,
           name: 'port',
-          value: parseInt(value, 10),
+          value: port,
         });
       },
     },
