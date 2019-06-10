@@ -63,7 +63,7 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
     return;
   }
 
-  if (serverUnitID !== 255 && serverUnitID !== unitID) {
+  if ((serverUnitID !== 255 || serverUnitID !== 0) && serverUnitID !== unitID) {
     this.numWrongUnitID += 1;
     return;
   }
