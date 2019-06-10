@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import jsonfile from 'jsonfile';
+import modbus from 'modbus-serial';
+import ModbusRTU from 'modbus-serverrtu';
 
 const { dialog } = require('electron').remote;
 
@@ -47,6 +49,10 @@ function setCommPortConfig(commPort, type) {
 
 const state = {
   commPorts: [],
+  runtime: {
+    started: false,
+    modbus: [],
+  },
 };
 
 const mutations = {
@@ -96,6 +102,58 @@ const mutations = {
   },
   LOAD_PROJECT(s, commPorts) {
     state.commPorts = commPorts;
+  },
+  START_COMM_PORT(s, payload) {
+    const { port, ndx } = payload;
+    let instance;
+
+    const vector = {
+      /* eslint-disable no-unused-vars */
+      getInputRegister: (addr, unitID, cb) => {
+      },
+      /* eslint-disable no-unused-vars */
+      getHoldingRegister: (addr, unitID, cb) => {
+      },
+      /* eslint-disable no-unused-vars */
+      getCoil: (addr, unitID, cb) => {
+      },
+      /* eslint-disable no-unused-vars */
+      getDiscreteInput: (addr, unitID, cb) => {
+      },
+      /* eslint-disable no-unused-vars */
+      setRegister: (addr, value, unitID, cb) => {
+      },
+      /* eslint-disable no-unused-vars */
+      setCoil: (addr, value, unitID, cb) => {
+      },
+    };
+
+    if (port.type === 'rtu') {
+      const options = {
+        unitID: 0,
+        baudRate: port.commParam.baud,
+        dataBits: port.commParam.dataBit,
+        stopBits: port.commParam.stopBit,
+        parity: port.commParam.parity,
+      };
+
+      instance = new ModbusRTU(vector, port.commParam.port, options);
+      instance.open();
+    } else {
+      instance = new modbus.ServerTCP(vector, {
+        host: '0.0.0.0',
+        port: port.commParam.port,
+        unitID: 0,
+      });
+    }
+
+    state.runtime.modbus[ndx] = instance;
+  },
+  STOP_COMM_PORT(s, payload) {
+    const { ndx } = payload;
+
+    state.runtime.modbus[ndx].stop();
+    state.runtime.modbus[ndx] = null;
   },
 };
 
@@ -147,7 +205,7 @@ const actions = {
         { name: 'MODBUS Slave Setting', extension: ['json'] },
       ],
     }, (filename) => {
-      jsonfile.writeFileSync(filename, state, { spaces: 2 });
+      jsonfile.writeFileSync(filename, state.commPorts, { spaces: 2 });
     });
   },
   loadProject(context) {
@@ -162,8 +220,18 @@ const actions = {
           console.log(err);
           return;
         }
-        context.commit('LOAD_PROJECT', json.commPorts);
+        context.commit('LOAD_PROJECT', json);
       });
+    });
+  },
+  startSlaves(context) {
+    state.commPorts.forEach((port, ndx) => {
+      context.commit('START_COMM_PORT', { port, ndx });
+    });
+  },
+  stopSlaves(context) {
+    state.commPorts.forEach((port, ndx) => {
+      context.commit('STOP_COMM_PORT', { port, ndx });
     });
   },
 };

@@ -1,0 +1,8 @@
+{
+  "name": "modbus-serverrtu",
+  "version": "0.1.0",
+  "dependencies": {
+    "modbus-serial": "^7.6.0",
+    "serialport": "^7.1.3"
+  }
+}
