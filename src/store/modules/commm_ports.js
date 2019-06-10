@@ -47,6 +47,36 @@ function setCommPortConfig(commPort, type) {
   Vue.set(commPort, 'config', c);
 }
 
+/* eslint-disable no-unused-vars */
+function handleGetInputRegister(commPort, addr, unitID, cb) {
+  // FIXME
+}
+
+/* eslint-disable no-unused-vars */
+function handleGetHoldingRegister(commPort, addr, unitID, cb) {
+  // FIXME
+}
+
+/* eslint-disable no-unused-vars */
+function handleGetCoil(commPort, addr, unitID, cb) {
+  // FIXME
+}
+
+/* eslint-disable no-unused-vars */
+function handleGetDiscreteInput(commPort, addr, unitID, cb) {
+  // FIXME
+}
+
+/* eslint-disable no-unused-vars */
+function handleSetRegister(commPort, addr, value, unitID, cb) {
+  // FIXME
+}
+
+/* eslint-disable no-unused-vars */
+function handleSetCoil(commPort, addr, value, unitID, cb) {
+  // FIXME
+}
+
 const state = {
   commPorts: [],
   runtime: {
@@ -110,21 +140,27 @@ const mutations = {
     const vector = {
       /* eslint-disable no-unused-vars */
       getInputRegister: (addr, unitID, cb) => {
+        handleGetInputRegister(port, addr, unitID, cb);
       },
       /* eslint-disable no-unused-vars */
       getHoldingRegister: (addr, unitID, cb) => {
+        handleGetHoldingRegister(port, addr, unitID, cb);
       },
       /* eslint-disable no-unused-vars */
       getCoil: (addr, unitID, cb) => {
+        handleGetCoil(port, addr, unitID, cb);
       },
       /* eslint-disable no-unused-vars */
       getDiscreteInput: (addr, unitID, cb) => {
+        handleGetDiscreteInput(port, addr, unitID, cb);
       },
       /* eslint-disable no-unused-vars */
       setRegister: (addr, value, unitID, cb) => {
+        handleSetRegister(port, addr, value, unitID, cb);
       },
       /* eslint-disable no-unused-vars */
       setCoil: (addr, value, unitID, cb) => {
+        handleSetCoil(port, addr, value, unitID, cb);
       },
     };
 
