@@ -1,4 +1,7 @@
 import Vue from 'vue';
+import jsonfile from 'jsonfile';
+
+const { dialog } = require('electron').remote;
 
 const serialBauds = [9600, 19200, 38400, 57600, 115200];
 const serialPorts = [
@@ -88,6 +91,12 @@ const mutations = {
 
     commPort.config.commParam[payload.name] = payload.value;
   },
+  NEW_PROJECT() {
+    state.commPorts = [];
+  },
+  LOAD_PROJECT(s, commPorts) {
+    state.commPorts = commPorts;
+  },
 };
 
 const actions = {
@@ -127,6 +136,35 @@ const actions = {
    */
   commPortClear(context) {
     context.commit('COMM_PORT_CLEAR');
+  },
+  newProject(context) {
+    context.commit('NEW_PROJECT');
+  },
+  saveProject() {
+    dialog.showSaveDialog({
+      title: 'Save Current Project',
+      filters: [
+        { name: 'MODBUS Slave Setting', extension: ['json'] },
+      ],
+    }, (filename) => {
+      jsonfile.writeFileSync(filename, state, { spaces: 2 });
+    });
+  },
+  loadProject(context) {
+    dialog.showOpenDialog({
+      title: 'Load Project',
+      filters: [
+        { name: 'MODBUS Slave Setting', extension: ['json'] },
+      ],
+    }, (filePaths) => {
+      jsonfile.readFile(filePaths[0], (err, json) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        context.commit('LOAD_PROJECT', json.commPorts);
+      });
+    });
   },
 };
 

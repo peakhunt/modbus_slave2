@@ -16,6 +16,16 @@
         <span>New Communication Port</span>
       </v-tooltip>
 
+      <v-btn flat @click="onNewProject">
+        <span class="mr-2">New</span>
+      </v-btn>
+      <v-btn flat @click="onSaveProject">
+        <span class="mr-2">Save</span>
+      </v-btn>
+      <v-btn flat @click="onLoadProject">
+        <span class="mr-2">Load</span>
+      </v-btn>
+
       <v-btn
         flat
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
@@ -47,6 +57,15 @@ export default {
   methods: {
     onNewCommPort() {
       this.$store.dispatch('commPortAddNew');
+    },
+    onNewProject() {
+      this.$store.dispatch('newProject');
+    },
+    onSaveProject() {
+      this.$store.dispatch('saveProject');
+    },
+    onLoadProject() {
+      this.$store.dispatch('loadProject');
     },
   },
 };

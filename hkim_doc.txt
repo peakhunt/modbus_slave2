@@ -5,4 +5,8 @@
   d) vue add vuetify
   e) npm run electron:serve
 
-- 
+- ToDo
+  a) new project
+  b) project save
+  c) project load
+  d) modbus integration
