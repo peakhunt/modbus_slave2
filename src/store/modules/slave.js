@@ -44,6 +44,20 @@ const mutations = {
     slave.registerList.splice(ndx, 1);
     Vue.delete(slave.registers[reg.type], reg.address);
   },
+  SLAVE_UPDATE_REG(s, payload) {
+    const { slave, oldReg, newReg } = payload;
+    const ndx = slave.registerList.indexOf(oldReg);
+    const reg = JSON.parse(JSON.stringify(newReg));
+
+    // delete old register from dictionary
+    Vue.delete(slave.registers[oldReg.type], oldReg.address);
+
+    // add new register to dictionary
+    Vue.set(slave.registers[reg.type], reg.address, reg);
+
+    // update register in registerList
+    Vue.set(slave.registerList, ndx, reg);
+  },
 };
 
 const actions = {
@@ -58,6 +72,9 @@ const actions = {
   },
   slaveDelRegister(context, payload) {
     context.commit('SLAVE_DEL_REG', payload);
+  },
+  slaveUpdateRegister(context, payload) {
+    context.commit('SLAVE_UPDATE_REG', payload);
   },
 };
 

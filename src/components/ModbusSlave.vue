@@ -28,7 +28,7 @@
                 <v-layout wrap>
                   <v-flex xs12>
                     <v-select
-                     v-model="addNewDlg.type"
+                     v-model="newReg.type"
                      :items="registerTypes"
                      label="Register Type"
                     />
@@ -36,19 +36,19 @@
                   <v-flex xs12>
                     <v-text-field
                      label="Address"
-                     v-model="addNewDlg.address"
+                     v-model="newReg.address"
                     />
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field
                      label="Description"
-                     v-model="addNewDlg.desc"
+                     v-model="newReg.desc"
                     />
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field
                      label="Value"
-                     v-model="addNewDlg.value"
+                     v-model="newReg.value"
                     />
                   </v-flex>
                 </v-layout>
@@ -56,8 +56,10 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click="dialog = false">Cancel</v-btn>
-                <v-btn color="blue darken-1" flat @click="onAddRegisters">Save</v-btn>
+                <v-btn color="blue darken-1" flat @click="onCancel">Cancel</v-btn>
+                <v-btn color="blue darken-1" flat @click="onAddEditRegisters">
+                  {{ editMode ? 'Update' : 'Add' }}
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -68,10 +70,15 @@
          class="elevation-1"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.type }}</td>
-            <td>{{ props.item.address }}</td>
+            <td width="100px">{{ props.item.type }}</td>
+            <td width="150px">{{ props.item.address }}</td>
             <td>{{ props.item.desc }}</td>
             <td>{{ props.item.value }}</td>
+
+            <td>
+              <v-icon small class="mr-2" @click="onEditRegister(props.item)"> edit </v-icon>
+              <v-icon small @click="onDelRegister(props.item)"> delete </v-icon>
+            </td>
           </template>
         </v-data-table>
       </v-flex>
@@ -102,9 +109,36 @@ export default {
     },
   },
   methods: {
-    onAddRegisters() {
-      this.$store.dispatch('slaveAddRegister', { slave: this.slave, regCfg: this.addNewDlg });
+    onAddEditRegisters() {
+      if (this.editMode === false) {
+        this.$store.dispatch('slaveAddRegister', { slave: this.slave, regCfg: this.newReg });
+      } else {
+        this.$store.dispatch('slaveUpdateRegister', {
+          slave: this.slave,
+          oldReg: this.editReg,
+          newReg: this.newReg,
+        });
+        this.editMode = false;
+      }
       this.dialog = false;
+    },
+    onEditRegister(reg) {
+      this.newReg.type = reg.type;
+      this.newReg.address = reg.address;
+      this.newReg.desc = reg.desc;
+      this.newReg.value = reg.value;
+
+      this.editReg = reg;
+
+      this.editMode = true;
+      this.dialog = true;
+    },
+    onDelRegister(reg) {
+      this.$store.dispatch('slaveDelRegister', { slave: this.slave, reg });
+    },
+    onCancel() {
+      this.dialog = false;
+      this.editMode = false;
     },
   },
   data() {
@@ -115,6 +149,7 @@ export default {
         { text: 'Address', value: 'address' },
         { text: 'Description', value: 'desc' },
         { text: 'Value', value: 'value', sortable: false },
+        { text: 'Actions', value: 'name', sortable: false },
       ],
       items: [],
       registerTypes: [
@@ -123,12 +158,14 @@ export default {
         'holding',
         'input',
       ],
-      addNewDlg: {
+      newReg: {
         type: '',
         address: 1,
         desc: '',
         value: 0,
       },
+      editReg: null,
+      editMode: false,
     };
   },
 };
