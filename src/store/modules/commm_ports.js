@@ -47,34 +47,129 @@ function setCommPortConfig(commPort, type) {
   Vue.set(commPort, 'config', c);
 }
 
+function getSlaveFromCommPort(commPort, unitID) {
+  for (let i = 0; i < commPort.slaves.length; i += 1) {
+    if (commPort.slaves[i].address === unitID) {
+      return commPort.slaves[i];
+    }
+  }
+  return null;
+}
+
 /* eslint-disable no-unused-vars */
 function handleGetInputRegister(commPort, addr, unitID, cb) {
-  // FIXME
+  const slave = getSlaveFromCommPort(commPort, unitID);
+
+  if (slave === null) {
+    cb({ modbusErrorCode: 0x04 });
+    return;
+  }
+
+  const reg = slave.input[addr];
+
+  if (reg === undefined) {
+    cb({ modbusErrorCode: 0x02 });
+    return;
+  }
+
+  cb(null, reg.value);
 }
 
 /* eslint-disable no-unused-vars */
 function handleGetHoldingRegister(commPort, addr, unitID, cb) {
-  // FIXME
+  const slave = getSlaveFromCommPort(commPort, unitID);
+
+  if (slave === null) {
+    cb({ modbusErrorCode: 0x04 });
+    return;
+  }
+
+  const reg = slave.holding[addr];
+
+  if (reg === undefined) {
+    cb({ modbusErrorCode: 0x02 });
+    return;
+  }
+
+  cb(null, reg.value);
 }
 
 /* eslint-disable no-unused-vars */
 function handleGetCoil(commPort, addr, unitID, cb) {
-  // FIXME
+  const slave = getSlaveFromCommPort(commPort, unitID);
+
+  if (slave === null) {
+    cb({ modbusErrorCode: 0x04 });
+    return;
+  }
+
+  const reg = slave.coil[addr];
+
+  if (reg === undefined) {
+    cb({ modbusErrorCode: 0x02 });
+    return;
+  }
+
+  cb(null, reg.value);
 }
 
 /* eslint-disable no-unused-vars */
 function handleGetDiscreteInput(commPort, addr, unitID, cb) {
-  // FIXME
+  const slave = getSlaveFromCommPort(commPort, unitID);
+
+  if (slave === null) {
+    cb({ modbusErrorCode: 0x04 });
+    return;
+  }
+
+  const reg = slave.discrete[addr];
+
+  if (reg === undefined) {
+    cb({ modbusErrorCode: 0x02 });
+    return;
+  }
+
+  cb(null, reg.value);
 }
 
 /* eslint-disable no-unused-vars */
 function handleSetRegister(commPort, addr, value, unitID, cb) {
-  // FIXME
+  const slave = getSlaveFromCommPort(commPort, unitID);
+
+  if (slave === null) {
+    cb({ modbusErrorCode: 0x04 });
+    return;
+  }
+
+  const reg = slave.holding[addr];
+
+  if (reg === undefined) {
+    cb({ modbusErrorCode: 0x02 });
+    return;
+  }
+
+  reg.value = value;
+  cb();
 }
 
 /* eslint-disable no-unused-vars */
 function handleSetCoil(commPort, addr, value, unitID, cb) {
-  // FIXME
+  const slave = getSlaveFromCommPort(commPort, unitID);
+
+  if (slave === null) {
+    cb({ modbusErrorCode: 0x04 });
+    return;
+  }
+
+  const reg = slave.coil[addr];
+
+  if (reg === undefined) {
+    cb({ modbusErrorCode: 0x02 });
+    return;
+  }
+
+  reg.value = value;
+  cb();
 }
 
 const state = {
