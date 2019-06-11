@@ -36,7 +36,8 @@
                   <v-flex xs12>
                     <v-text-field
                      label="Address"
-                     v-model="newReg.address"
+                     v-model.number="newReg.address"
+                     type="number"
                     />
                   </v-flex>
                   <v-flex xs12>
@@ -45,10 +46,18 @@
                      v-model="newReg.desc"
                     />
                   </v-flex>
-                  <v-flex xs12>
+                  <v-flex xs12 v-if="newReg.type !== 'coil' && newRegtype !== 'discrete'">
                     <v-text-field
                      label="Value"
+                     v-model.number="newReg.value"
+                     type="number"
+                    />
+                  </v-flex>
+                  <v-flex xs12 v-if="newReg.type === 'coil' || newRegtype === 'discrete'">
+                    <v-select
                      v-model="newReg.value"
+                     :items="boolValues"
+                     label="Value"
                     />
                   </v-flex>
                 </v-layout>
@@ -151,7 +160,7 @@ export default {
         { text: 'Value', value: 'value', sortable: false },
         { text: 'Actions', value: 'name', sortable: false },
       ],
-      items: [],
+      boolValues: [true, false],
       registerTypes: [
         'coil',
         'discrete',
@@ -159,10 +168,10 @@ export default {
         'input',
       ],
       newReg: {
-        type: '',
+        type: 'coil',
         address: 1,
         desc: '',
-        value: 0,
+        value: false,
       },
       editReg: null,
       editMode: false,

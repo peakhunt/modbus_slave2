@@ -286,6 +286,9 @@ const mutations = {
     state.runtime.modbus[ndx].stop();
     state.runtime.modbus[ndx] = null;
   },
+  SET_STARTED(s, v) {
+    state.runtime.started = v;
+  },
 };
 
 const actions = {
@@ -359,11 +362,13 @@ const actions = {
     state.commPorts.forEach((port, ndx) => {
       context.commit('START_COMM_PORT', { port, ndx });
     });
+    context.commit('SET_STARTED', true);
   },
   stopSlaves(context) {
     state.commPorts.forEach((port, ndx) => {
       context.commit('STOP_COMM_PORT', { port, ndx });
     });
+    context.commit('SET_STARTED', false);
   },
 };
 
@@ -388,6 +393,9 @@ const getters = {
   },
   commSerialStopbits() {
     return serialStopbits;
+  },
+  runtimeStarted() {
+    return state.runtime.started;
   },
 };
 
