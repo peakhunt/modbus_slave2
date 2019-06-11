@@ -46,14 +46,14 @@
                      v-model="newReg.desc"
                     />
                   </v-flex>
-                  <v-flex xs12 v-if="newReg.type !== 'coil' && newRegtype !== 'discrete'">
+                  <v-flex xs12 v-if="newReg.type !== 'coil' && newReg.type !== 'discrete'">
                     <v-text-field
                      label="Value"
                      v-model.number="newReg.value"
                      type="number"
                     />
                   </v-flex>
-                  <v-flex xs12 v-if="newReg.type === 'coil' || newRegtype === 'discrete'">
+                  <v-flex xs12 v-if="newReg.type === 'coil' || newReg.type === 'discrete'">
                     <v-select
                      v-model="newReg.value"
                      :items="boolValues"
