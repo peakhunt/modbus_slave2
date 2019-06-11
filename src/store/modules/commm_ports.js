@@ -262,18 +262,18 @@ const mutations = {
     if (port.type === 'rtu') {
       const options = {
         unitID: 0,
-        baudRate: port.commParam.baud,
-        dataBits: port.commParam.dataBit,
-        stopBits: port.commParam.stopBit,
-        parity: port.commParam.parity,
+        baudRate: port.config.commParam.baud,
+        dataBits: port.config.commParam.dataBit,
+        stopBits: port.config.commParam.stopBit,
+        parity: port.config.commParam.parity,
       };
 
-      instance = new ModbusRTU(vector, port.commParam.port, options);
+      instance = new ModbusRTU(vector, port.config.commParam.port, options);
       instance.open();
     } else {
       instance = new modbus.ServerTCP(vector, {
         host: '0.0.0.0',
-        port: port.commParam.port,
+        port: port.config.commParam.port,
         unitID: 0,
       });
     }
