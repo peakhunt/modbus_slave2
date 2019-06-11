@@ -31,6 +31,7 @@
                      v-model="newReg.type"
                      :items="registerTypes"
                      label="Register Type"
+                     @change="onSelectRegType"
                     />
                   </v-flex>
                   <v-flex xs12>
@@ -118,6 +119,18 @@ export default {
     },
   },
   methods: {
+    onSelectRegType(value) {
+      switch (value) {
+        case 'coil':
+        case 'discrete':
+          this.newReg.value = false;
+          break;
+
+        default:
+          this.newReg.value = 0;
+          break;
+      }
+    },
     onAddEditRegisters() {
       if (this.editMode === false) {
         this.$store.dispatch('slaveAddRegister', { slave: this.slave, regCfg: this.newReg });
