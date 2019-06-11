@@ -261,7 +261,6 @@ const mutations = {
 
     if (port.config.type === 'rtu') {
       const options = {
-        unitID: 0,
         baudRate: port.config.commParam.baud,
         dataBits: port.config.commParam.dataBit,
         stopBits: port.config.commParam.stopBit,
@@ -274,7 +273,6 @@ const mutations = {
       instance = new modbus.ServerTCP(vector, {
         host: '0.0.0.0',
         port: port.config.commParam.port,
-        unitID: 0,
       });
     }
 

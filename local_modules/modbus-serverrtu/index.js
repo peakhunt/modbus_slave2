@@ -63,7 +63,7 @@ function _parseModbusBuffer(reqFrame, vector, serverUnitID, rtuWriter) {
     return;
   }
 
-  if ((serverUnitID !== 255 || serverUnitID !== 0) && serverUnitID !== unitID) {
+  if (serverUnitID !== 255 && serverUnitID !== unitID) {
     this.numWrongUnitID += 1;
     return;
   }
@@ -119,7 +119,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
 
   opt.autoOpen = false;
 
-  const serverUnitID = opt.unitID === undefined ? UNIT_ID : opt.unitID;
+  const serverUnitID = opt.unitID || UNIT_ID;
 
   // create the SerialPort
   self._client = new SerialPort(path, opt);
