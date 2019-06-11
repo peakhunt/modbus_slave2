@@ -65,7 +65,7 @@ function handleGetInputRegister(commPort, addr, unitID, cb) {
     return;
   }
 
-  const reg = slave.input[addr];
+  const reg = slave.registers.input[addr];
 
   if (reg === undefined) {
     cb({ modbusErrorCode: 0x02 });
@@ -84,7 +84,7 @@ function handleGetHoldingRegister(commPort, addr, unitID, cb) {
     return;
   }
 
-  const reg = slave.holding[addr];
+  const reg = slave.registers.holding[addr];
 
   if (reg === undefined) {
     cb({ modbusErrorCode: 0x02 });
@@ -103,7 +103,7 @@ function handleGetCoil(commPort, addr, unitID, cb) {
     return;
   }
 
-  const reg = slave.coil[addr];
+  const reg = slave.registers.coil[addr];
 
   if (reg === undefined) {
     cb({ modbusErrorCode: 0x02 });
@@ -122,7 +122,7 @@ function handleGetDiscreteInput(commPort, addr, unitID, cb) {
     return;
   }
 
-  const reg = slave.discrete[addr];
+  const reg = slave.registers.discrete[addr];
 
   if (reg === undefined) {
     cb({ modbusErrorCode: 0x02 });
@@ -141,7 +141,7 @@ function handleSetRegister(commPort, addr, value, unitID, cb) {
     return;
   }
 
-  const reg = slave.holding[addr];
+  const reg = slave.registers.holding[addr];
 
   if (reg === undefined) {
     cb({ modbusErrorCode: 0x02 });
@@ -161,7 +161,7 @@ function handleSetCoil(commPort, addr, value, unitID, cb) {
     return;
   }
 
-  const reg = slave.coil[addr];
+  const reg = slave.registers.coil[addr];
 
   if (reg === undefined) {
     cb({ modbusErrorCode: 0x02 });
