@@ -283,7 +283,7 @@ const mutations = {
   STOP_COMM_PORT(s, payload) {
     const { ndx } = payload;
 
-    state.runtime.modbus[ndx].stop();
+    state.runtime.modbus[ndx].close();
     state.runtime.modbus[ndx] = null;
   },
   SET_STARTED(s, v) {
