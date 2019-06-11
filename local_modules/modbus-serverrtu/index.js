@@ -119,7 +119,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
 
   opt.autoOpen = false;
 
-  const serverUnitID = opt.unitID || UNIT_ID;
+  const serverUnitID = opt.unitID === undefined ? UNIT_ID : opt.unitID;
 
   // create the SerialPort
   self._client = new SerialPort(path, opt);
