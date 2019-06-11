@@ -19,7 +19,7 @@ const serialParities = [
   'space',
 ];
 const serialDatabits = [5, 6, 7, 8];
-const serialStopbits = [1, 2];
+const serialStopbits = ['1', '2'];
 const tcpDefaultPort = 10123;
 
 function setCommPortConfig(commPort, type) {
