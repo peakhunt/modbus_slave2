@@ -265,6 +265,7 @@ const mutations = {
         dataBits: port.config.commParam.dataBit,
         stopBits: port.config.commParam.stopBit,
         parity: port.config.commParam.parity,
+        modbusRXTimeout: 500,
       };
 
       instance = new ModbusRTU(vector, port.config.commParam.port, options);
