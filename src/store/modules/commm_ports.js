@@ -259,7 +259,7 @@ const mutations = {
       },
     };
 
-    if (port.type === 'rtu') {
+    if (port.config.type === 'rtu') {
       const options = {
         unitID: 0,
         baudRate: port.config.commParam.baud,
