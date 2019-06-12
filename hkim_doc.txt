@@ -4,6 +4,9 @@
   c) vue add electron-builder
   d) vue add vuetify
   e) npm run electron:serve
+  f) modbus integration
 
-- ToDo
-  d) modbus integration
+
+ToDo
+  h) some final touches on UI
+     like disabling some actions when slave is running
