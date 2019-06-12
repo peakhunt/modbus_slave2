@@ -202,13 +202,15 @@ const ServerRTU = function serverRTU(vector, path, options) {
       self._buffer = Buffer.alloc(0);
       self._rxTimeout = null;
 
+      /*
       setTimeout(
         _parseModbusBuffer.bind(self,
           reqFrame,
           vector,
           serverUnitID,
           rtuWriter), 0,
-      );
+      );*/
+      _parseModbusBuffer.bind(self, reqFrame, vector, serverUnitID, rtuWriter);
     }
   });
 
