@@ -2,4 +2,4 @@
 
 A simple modbus slave simulator using electron/javascript.
 
-![Screen shot](doc/dmeo.png" "demo screen shot")
+![Screen shot](docs/dmeo.png" "demo screen shot")
