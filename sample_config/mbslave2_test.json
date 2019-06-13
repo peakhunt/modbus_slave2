@@ -1,0 +1,761 @@
+[
+  {
+    "config": {
+      "type": "rtu",
+      "commParam": {
+        "port": "/dev/ttyUSB0",
+        "baud": 38400,
+        "parity": "none",
+        "dataBit": 8,
+        "stopBit": 1
+      }
+    },
+    "slaves": [
+      {
+        "address": 8,
+        "registers": {
+          "coil": {},
+          "discrete": {},
+          "holding": {},
+          "input": {
+            "1000": {
+              "type": "input",
+              "address": 1000,
+              "desc": "PORT-01 4-20mA Input",
+              "value": 0
+            },
+            "1001": {
+              "type": "input",
+              "address": 1001,
+              "desc": "PORT-02 4-20mA Input",
+              "value": 0
+            },
+            "1002": {
+              "type": "input",
+              "address": 1002,
+              "desc": "PORT-03 4-20mA Input",
+              "value": 0
+            },
+            "1003": {
+              "type": "input",
+              "address": 1003,
+              "desc": "PORT-04 4-20mA Input",
+              "value": 0
+            },
+            "1004": {
+              "type": "input",
+              "address": 1004,
+              "desc": "PORT-05 4-20mA Input",
+              "value": 0
+            },
+            "1005": {
+              "type": "input",
+              "address": 1005,
+              "desc": "PORT-06 4-20mA Input",
+              "value": 0
+            },
+            "1006": {
+              "type": "input",
+              "address": 1006,
+              "desc": "PORT-07 4-20mA Input",
+              "value": 0
+            },
+            "1007": {
+              "type": "input",
+              "address": 1007,
+              "desc": "PORT-08 4-20mA Input",
+              "value": 0
+            },
+            "1008": {
+              "type": "input",
+              "address": 1008,
+              "desc": "PORT-09 4-20mA Input",
+              "value": 0
+            },
+            "1009": {
+              "type": "input",
+              "address": 1009,
+              "desc": "PORT-10 4-20mA Input",
+              "value": 0
+            },
+            "1010": {
+              "type": "input",
+              "address": 1010,
+              "desc": "PORT-11 4-20mA Input",
+              "value": 0
+            },
+            "1011": {
+              "type": "input",
+              "address": 1011,
+              "desc": "PORT-12 4-20mA Input",
+              "value": 0
+            }
+          }
+        },
+        "registerList": [
+          {
+            "type": "input",
+            "address": 1000,
+            "desc": "PORT-01 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1001,
+            "desc": "PORT-02 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1002,
+            "desc": "PORT-03 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1003,
+            "desc": "PORT-04 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1004,
+            "desc": "PORT-05 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1005,
+            "desc": "PORT-06 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1006,
+            "desc": "PORT-07 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1007,
+            "desc": "PORT-08 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1008,
+            "desc": "PORT-09 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1009,
+            "desc": "PORT-10 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1010,
+            "desc": "PORT-11 4-20mA Input",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1011,
+            "desc": "PORT-12 4-20mA Input",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "address": 9,
+        "registers": {
+          "coil": {},
+          "discrete": {
+            "1000": {
+              "type": "discrete",
+              "address": 1000,
+              "desc": "PORT-01 Status",
+              "value": false
+            },
+            "1001": {
+              "type": "discrete",
+              "address": 1001,
+              "desc": "PORT-02 Status",
+              "value": false
+            },
+            "1002": {
+              "type": "discrete",
+              "address": 1002,
+              "desc": "PORT-03 Status",
+              "value": false
+            },
+            "1003": {
+              "type": "discrete",
+              "address": 1003,
+              "desc": "PORT-04 Status",
+              "value": false
+            },
+            "1004": {
+              "type": "discrete",
+              "address": 1004,
+              "desc": "PORT-05 Status",
+              "value": false
+            },
+            "1005": {
+              "type": "discrete",
+              "address": 1005,
+              "desc": "PORT-06 Status",
+              "value": false
+            },
+            "1006": {
+              "type": "discrete",
+              "address": 1006,
+              "desc": "PORT-07 Status",
+              "value": false
+            },
+            "1007": {
+              "type": "discrete",
+              "address": 1007,
+              "desc": "PORT-08 Status",
+              "value": false
+            },
+            "1008": {
+              "type": "discrete",
+              "address": 1008,
+              "desc": "PORT-09 Status",
+              "value": false
+            },
+            "1009": {
+              "type": "discrete",
+              "address": 1009,
+              "desc": "PORT-10 Status",
+              "value": false
+            },
+            "1010": {
+              "type": "discrete",
+              "address": 1010,
+              "desc": "PORT-11 Status",
+              "value": false
+            },
+            "1011": {
+              "type": "discrete",
+              "address": 1011,
+              "desc": "PORT-12 Status",
+              "value": false
+            }
+          },
+          "holding": {},
+          "input": {
+            "1000": {
+              "type": "input",
+              "address": 1000,
+              "desc": "PORT-1 distance",
+              "value": 0
+            },
+            "1001": {
+              "type": "input",
+              "address": 1001,
+              "desc": "PORT-1 level",
+              "value": 0
+            },
+            "1002": {
+              "type": "input",
+              "address": 1002,
+              "desc": "PORT-1 4-20mA current feedback",
+              "value": 0
+            },
+            "1003": {
+              "type": "input",
+              "address": 1003,
+              "desc": "PORT-2 distance",
+              "value": 0
+            },
+            "1004": {
+              "type": "input",
+              "address": 1004,
+              "desc": "PORT-2 level",
+              "value": 0
+            },
+            "1005": {
+              "type": "input",
+              "address": 1005,
+              "desc": "PORT-2 4-20mA current feedback",
+              "value": 0
+            },
+            "1006": {
+              "type": "input",
+              "address": 1006,
+              "desc": "PORT-3 distance",
+              "value": 0
+            },
+            "1007": {
+              "type": "input",
+              "address": 1007,
+              "desc": "PORT-3 level",
+              "value": 0
+            },
+            "1008": {
+              "type": "input",
+              "address": 1008,
+              "desc": "PORT-3 4-20mA current feedback",
+              "value": 0
+            },
+            "1009": {
+              "type": "input",
+              "address": 1009,
+              "desc": "PORT-4 distance",
+              "value": 0
+            },
+            "1010": {
+              "type": "input",
+              "address": 1010,
+              "desc": "PORT-4 level",
+              "value": 0
+            },
+            "1011": {
+              "type": "input",
+              "address": 1011,
+              "desc": "PORT-4 4-20mA current feedback",
+              "value": 0
+            },
+            "1012": {
+              "type": "input",
+              "address": 1012,
+              "desc": "PORT-5 distance",
+              "value": 0
+            },
+            "1013": {
+              "type": "input",
+              "address": 1013,
+              "desc": "PORT-5 level",
+              "value": 0
+            },
+            "1014": {
+              "type": "input",
+              "address": 1014,
+              "desc": "PORT-5 4-20mA current feedback",
+              "value": 0
+            },
+            "1015": {
+              "type": "input",
+              "address": 1015,
+              "desc": "PORT-6 distance",
+              "value": 0
+            },
+            "1016": {
+              "type": "input",
+              "address": 1016,
+              "desc": "PORT-6 level",
+              "value": 0
+            },
+            "1017": {
+              "type": "input",
+              "address": 1017,
+              "desc": "PORT-6 4-20mA current feedback",
+              "value": 0
+            },
+            "1018": {
+              "type": "input",
+              "address": 1018,
+              "desc": "PORT-7 distance",
+              "value": 0
+            },
+            "1019": {
+              "type": "input",
+              "address": 1019,
+              "desc": "PORT-7 level",
+              "value": 0
+            },
+            "1020": {
+              "type": "input",
+              "address": 1020,
+              "desc": "PORT-7 4-20mA current feedback",
+              "value": 0
+            },
+            "1021": {
+              "type": "input",
+              "address": 1021,
+              "desc": "PORT-8 distance",
+              "value": 0
+            },
+            "1022": {
+              "type": "input",
+              "address": 1022,
+              "desc": "PORT-8 level",
+              "value": 0
+            },
+            "1023": {
+              "type": "input",
+              "address": 1023,
+              "desc": "PORT-8 4-20mA current feedback",
+              "value": 0
+            },
+            "1024": {
+              "type": "input",
+              "address": 1024,
+              "desc": "PORT-9 distance",
+              "value": 0
+            },
+            "1025": {
+              "type": "input",
+              "address": 1025,
+              "desc": "PORT-9 level",
+              "value": 0
+            },
+            "1026": {
+              "type": "input",
+              "address": 1026,
+              "desc": "PORT-9 4-20mA current feedback",
+              "value": 0
+            },
+            "1027": {
+              "type": "input",
+              "address": 1027,
+              "desc": "PORT-10 distance",
+              "value": 0
+            },
+            "1028": {
+              "type": "input",
+              "address": 1028,
+              "desc": "PORT-10 level",
+              "value": 0
+            },
+            "1029": {
+              "type": "input",
+              "address": 1029,
+              "desc": "PORT-10 4-20mA current feedback",
+              "value": 0
+            },
+            "1030": {
+              "type": "input",
+              "address": 1030,
+              "desc": "PORT-11 distance",
+              "value": 0
+            },
+            "1031": {
+              "type": "input",
+              "address": 1031,
+              "desc": "PORT-11 level",
+              "value": 0
+            },
+            "1032": {
+              "type": "input",
+              "address": 1032,
+              "desc": "PORT-11 4-20mA current feedback",
+              "value": 0
+            },
+            "1033": {
+              "type": "input",
+              "address": 1033,
+              "desc": "PORT-12 distance",
+              "value": 0
+            },
+            "1034": {
+              "type": "input",
+              "address": 1034,
+              "desc": "PORT-12 level",
+              "value": 0
+            },
+            "1035": {
+              "type": "input",
+              "address": 1035,
+              "desc": "PORT-12 4-20mA current feedback",
+              "value": 0
+            }
+          }
+        },
+        "registerList": [
+          {
+            "type": "input",
+            "address": 1000,
+            "desc": "PORT-1 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1001,
+            "desc": "PORT-1 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1002,
+            "desc": "PORT-1 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1003,
+            "desc": "PORT-2 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1004,
+            "desc": "PORT-2 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1005,
+            "desc": "PORT-2 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1006,
+            "desc": "PORT-3 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1007,
+            "desc": "PORT-3 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1008,
+            "desc": "PORT-3 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1009,
+            "desc": "PORT-4 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1010,
+            "desc": "PORT-4 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1011,
+            "desc": "PORT-4 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1012,
+            "desc": "PORT-5 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1013,
+            "desc": "PORT-5 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1014,
+            "desc": "PORT-5 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1015,
+            "desc": "PORT-6 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1016,
+            "desc": "PORT-6 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1017,
+            "desc": "PORT-6 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1018,
+            "desc": "PORT-7 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1019,
+            "desc": "PORT-7 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1020,
+            "desc": "PORT-7 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1021,
+            "desc": "PORT-8 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1022,
+            "desc": "PORT-8 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1023,
+            "desc": "PORT-8 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1024,
+            "desc": "PORT-9 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1025,
+            "desc": "PORT-9 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1026,
+            "desc": "PORT-9 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1027,
+            "desc": "PORT-10 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1028,
+            "desc": "PORT-10 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1029,
+            "desc": "PORT-10 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1030,
+            "desc": "PORT-11 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1031,
+            "desc": "PORT-11 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1032,
+            "desc": "PORT-11 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1033,
+            "desc": "PORT-12 distance",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1034,
+            "desc": "PORT-12 level",
+            "value": 0
+          },
+          {
+            "type": "input",
+            "address": 1035,
+            "desc": "PORT-12 4-20mA current feedback",
+            "value": 0
+          },
+          {
+            "type": "discrete",
+            "address": 1000,
+            "desc": "PORT-01 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1001,
+            "desc": "PORT-02 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1002,
+            "desc": "PORT-03 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1003,
+            "desc": "PORT-04 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1004,
+            "desc": "PORT-05 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1005,
+            "desc": "PORT-06 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1006,
+            "desc": "PORT-07 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1007,
+            "desc": "PORT-08 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1008,
+            "desc": "PORT-09 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1009,
+            "desc": "PORT-10 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1010,
+            "desc": "PORT-11 Status",
+            "value": false
+          },
+          {
+            "type": "discrete",
+            "address": 1011,
+            "desc": "PORT-12 Status",
+            "value": false
+          }
+        ]
+      }
+    ]
+  }
+]

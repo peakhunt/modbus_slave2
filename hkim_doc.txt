@@ -10,3 +10,4 @@
 ToDo
   h) some final touches on UI
      like disabling some actions when slave is running
+  i) serial port probing during startup
