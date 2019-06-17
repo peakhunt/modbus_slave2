@@ -2,11 +2,12 @@ import Vue from 'vue';
 import jsonfile from 'jsonfile';
 import modbus from 'modbus-serial';
 import ModbusRTU from 'modbus-serverrtu';
+import serialport from 'serialport';
 
 const { dialog } = require('electron').remote;
 
 const serialBauds = [9600, 19200, 38400, 57600, 115200];
-const serialPorts = [
+let serialPorts = [
   '/dev/ttyUSB0',
   '/dev/ttyUSB1',
   '/dev/ttyUSB2',
@@ -29,7 +30,7 @@ function setCommPortConfig(commPort, type) {
     c = {
       type: 'rtu',
       commParam: {
-        port: serialPorts[0],
+        port: serialPorts[0] || 'No Comm Port',
         baud: serialBauds[0],
         parity: serialParities[0],
         dataBit: serialDatabits[3],
@@ -222,6 +223,9 @@ const mutations = {
 
     commPort.config.commParam[payload.name] = payload.value;
   },
+  UPDATE_COMM_PORT_LIST(_, portList) {
+    serialPorts = portList;
+  },
   NEW_PROJECT() {
     state.commPorts = [];
   },
@@ -368,6 +372,22 @@ const actions = {
       context.commit('STOP_COMM_PORT', { port, ndx });
     });
     context.commit('SET_STARTED', false);
+  },
+  refreshPortList(context, cb) {
+    serialport.list((err, results) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      const portList = [];
+
+      results.forEach((port) => {
+        portList.push(port.comName);
+      });
+      context.commit('UPDATE_COMM_PORT_LIST', portList);
+      cb(undefined, results);
+    });
   },
 };
 
