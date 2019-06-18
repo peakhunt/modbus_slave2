@@ -8,6 +8,15 @@ I developed it for my personal use, and you are more than welcome to use this an
 
 ![Screen Shot](docs/demo.png "demo screen shot")
 
+## Setup & Run
+1. yarn install
+2. node_modules/.bin/electron-rebuild
+3. npm run electron:serve
+
+I don't know why but it looks like dependencies are broken with npm.
+
+Also it looks like we have to run electron-rebuild after fresh install.
+
 ## ToDo
 1. Serial Port List Probing
 2. Some final touches on UI
