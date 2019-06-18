@@ -14,6 +14,7 @@ I developed it for my personal use, and you are more than welcome to use this an
 3. npm run electron:serve
 
 I don't know why but it looks like dependencies are broken with npm.
+Go with yarn (sudo npm install -g yarn). It's much faster too.
 
 Also it looks like we have to run electron-rebuild after fresh install.
 
