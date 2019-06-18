@@ -2,7 +2,7 @@ import Vue from 'vue';
 import jsonfile from 'jsonfile';
 import modbus from 'modbus-serial';
 import ModbusRTU from 'modbus-serverrtu';
-import serialport from 'serialport';
+import SerialPort from 'serialport';
 
 const { dialog } = require('electron').remote;
 
@@ -374,7 +374,7 @@ const actions = {
     context.commit('SET_STARTED', false);
   },
   refreshPortList(context, cb) {
-    serialport.list((err, results) => {
+    SerialPort.list((err, results) => {
       if (err) {
         cb(err);
         return;
@@ -383,10 +383,14 @@ const actions = {
       const portList = [];
 
       results.forEach((port) => {
+        console.log(`port ${port.comName}`);
         portList.push(port.comName);
       });
       context.commit('UPDATE_COMM_PORT_LIST', portList);
-      cb(undefined, results);
+
+      if (cb !== undefined) {
+        cb(undefined, results);
+      }
     });
   },
 };

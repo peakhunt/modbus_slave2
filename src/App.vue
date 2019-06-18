@@ -34,6 +34,15 @@
         <span>New Communication Port</span>
       </v-tooltip>
 
+      <v-tooltip bottom v-if="!runtimeStarted">
+        <template #activator="data">
+          <v-btn icon v-on="data.on" @click="onScanCommPorts">
+            <v-icon large>refresh</v-icon>
+          </v-btn>
+        </template>
+        <span>Scan Comm Ports</span>
+      </v-tooltip>
+
       <v-btn flat @click="onNewProject">
         <span class="mr-2">New</span>
       </v-btn>
@@ -89,6 +98,9 @@ export default {
     },
     onLoadProject() {
       this.$store.dispatch('loadProject');
+    },
+    onScanCommPorts() {
+      this.$store.dispatch('refreshPortList');
     },
   },
 };
