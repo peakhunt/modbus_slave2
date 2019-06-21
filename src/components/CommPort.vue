@@ -2,8 +2,7 @@
 <v-card dark class="elevation-12">
   <v-toolbar>
     <v-toolbar-title class="text-uppercase">
-      {{commPort.config.type}} &nbsp; {{ commPort.config.commParam.port }}
-      &nbsp; {{commPort.numRxFrame}}/{{commPort.numTxFrame}}
+      {{commPort.config.type}} &nbsp; {{ commPort.config.commParam.port }} &nbsp; {{commPort.numRxFrame}} / {{commPort.numTxFrame}}
     </v-toolbar-title>
     <v-spacer/>
 
