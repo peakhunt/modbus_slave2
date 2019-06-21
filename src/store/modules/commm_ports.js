@@ -194,6 +194,10 @@ const mutations = {
     const commPort = {
       config: null,
       slaves: [],
+      numRxFrame: 0,
+      numTxFrame: 0,
+      numRxBytes: 0,
+      numTxBytes: 0,
     };
 
     setCommPortConfig(commPort, 'tcp');
@@ -294,23 +298,26 @@ const mutations = {
         port: port.config.commParam.port,
       });
     }
-
-    instance.addListener('rx', onRx);
-    instance.addListener('tx', onTx);
-
     state.runtime.modbus[ndx] = instance;
   },
   STOP_COMM_PORT(s, payload) {
     const { ndx } = payload;
-
-    state.runtime.modbus[ndx].removeListener('rx', onRx);
-    state.runtime.modbus[ndx].removeListener('tx', onTx);
 
     state.runtime.modbus[ndx].close();
     state.runtime.modbus[ndx] = null;
   },
   SET_STARTED(s, v) {
     state.runtime.started = v;
+  },
+  RX_STAT(s, payload) {
+    const { port } = payload;
+
+    port.numRxFrame += 1;
+  },
+  TX_STAT(s, payload) {
+    const { port } = payload;
+
+    port.numTxFrame += 1;
   },
 };
 
@@ -384,11 +391,20 @@ const actions = {
   startSlaves(context) {
     state.commPorts.forEach((port, ndx) => {
       context.commit('START_COMM_PORT', { port, ndx });
+
+      state.runtime.modbus[ndx].addListener('rx', (payload) => {
+        context.commit('RX_STAT', { port, frame: payload.frame });
+      });
+
+      state.runtime.modbus[ndx].addListener('tx', (payload) => {
+        context.commit('TX_STAT', { port, frame: payload.frame });
+      });
     });
     context.commit('SET_STARTED', true);
   },
   stopSlaves(context) {
     state.commPorts.forEach((port, ndx) => {
+      state.runtime.modbus[ndx].removeAllListeners();
       context.commit('STOP_COMM_PORT', { port, ndx });
     });
     context.commit('SET_STARTED', false);
