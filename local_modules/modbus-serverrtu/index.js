@@ -185,7 +185,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
 
       // send data back
       if (responseBuffer) {
-        self.emit("tx", responseBuffer);
+        self.emit("tx", { modbus: self, frame: responseBuffer });
         self._client.write(responseBuffer);
       }
     };
@@ -203,7 +203,7 @@ const ServerRTU = function serverRTU(vector, path, options) {
       self._buffer = Buffer.alloc(0);
       self._rxTimeout = null;
 
-      self.emit("rx", reqFrame);
+      self.emit("rx", { modbus: self, frame: reqFrame });
       /*
       setTimeout(
         _parseModbusBuffer.bind(self,

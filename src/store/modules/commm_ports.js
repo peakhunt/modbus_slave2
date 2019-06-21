@@ -181,6 +181,14 @@ const state = {
   },
 };
 
+function onRx(payload) {
+  console.log(`onRx ${payload.frame}`);
+}
+
+function onTx(payload) {
+  console.log(`onTx ${payload.frame}`);
+}
+
 const mutations = {
   COMM_PORT_ADD() {
     const commPort = {
@@ -287,10 +295,16 @@ const mutations = {
       });
     }
 
+    instance.addListener('rx', onRx);
+    instance.addListener('tx', onTx);
+
     state.runtime.modbus[ndx] = instance;
   },
   STOP_COMM_PORT(s, payload) {
     const { ndx } = payload;
+
+    state.runtime.modbus[ndx].removeListener('rx', onRx);
+    state.runtime.modbus[ndx].removeListener('tx', onTx);
 
     state.runtime.modbus[ndx].close();
     state.runtime.modbus[ndx] = null;

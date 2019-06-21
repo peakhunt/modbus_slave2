@@ -261,7 +261,7 @@ var ServerTCP = function(vector, options) {
 
                 modbusSerialDebug({ action: "receive", data: requestBuffer, requestBufferLength: requestBuffer.length });
                 modbusSerialDebug(JSON.stringify({ action: "receive", data: requestBuffer }));
-                modbus.emit("rx", requestBuffer);
+                modbus.emit("rx", { modbus, frame: requestBuffer });
 
                 var sockWriter = function(err, responseBuffer) {
                     if (err) {
@@ -280,7 +280,7 @@ var ServerTCP = function(vector, options) {
 
                         modbusSerialDebug({ action: "send", data: responseBuffer });
                         modbusSerialDebug(JSON.stringify({ action: "send string", data: responseBuffer }));
-                        modbus.emit("tx", responseBuffer);
+                        modbus.emit("tx", { modbus, frame: responseBuffer });
 
                         // write to port
                         sock.write(outTcp);
