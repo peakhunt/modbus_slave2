@@ -1,0 +1,7 @@
+{
+  "name": "modbus-servertcp",
+  "version": "0.1.0",
+  "dependencies": {
+    "modbus-serial": "^7.6.0"
+  }
+}

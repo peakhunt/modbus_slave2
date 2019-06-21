@@ -1,7 +1,7 @@
 module.exports = {
   configureWebpack: {
     externals: {
-      "serialport": "require('serialport')"
-    }
-  }
-}
+      serialport: "require('serialport')",
+    },
+  },
+};

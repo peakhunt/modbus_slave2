@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import jsonfile from 'jsonfile';
-import modbus from 'modbus-serial';
+import ModbusTCP from 'modbus-servertcp';
 import ModbusRTU from 'modbus-serverrtu';
 import SerialPort from 'serialport';
 
@@ -275,7 +275,13 @@ const mutations = {
       instance = new ModbusRTU(vector, port.config.commParam.port, options);
       instance.open();
     } else {
+      /*
       instance = new modbus.ServerTCP(vector, {
+        host: '0.0.0.0',
+        port: port.config.commParam.port,
+      });
+      */
+      instance = new ModbusTCP(vector, {
         host: '0.0.0.0',
         port: port.config.commParam.port,
       });
