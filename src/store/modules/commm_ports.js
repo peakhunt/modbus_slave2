@@ -149,6 +149,7 @@ function handleSetRegister(commPort, addr, value, unitID, cb) {
     return;
   }
 
+  // FIXME bug
   reg.value = value;
   cb();
 }
@@ -169,24 +170,46 @@ function handleSetCoil(commPort, addr, value, unitID, cb) {
     return;
   }
 
+  // FIXME bug
   reg.value = value;
   cb();
 }
 
 const state = {
   commPorts: [],
-  runtime: {
-    started: false,
-    modbus: [],
-  },
+  runtime: [],
+  started: false,
 };
 
-function onRx(payload) {
-  console.log(`onRx ${payload.frame}`);
+let modbusList = [];
+
+
+function addNewRuntime() {
+  state.runtime.push({
+    stats: {
+      numRxFrame: 0,
+      numTxFrame: 0,
+      numRxBytes: 0,
+      numTxBytes: 0,
+    },
+  });
 }
 
-function onTx(payload) {
-  console.log(`onTx ${payload.frame}`);
+function resetAndRebuildRuntime() {
+  modbusList.forEach((m) => {
+    if (m !== null) {
+      m.close();
+    }
+  });
+
+  state.runtime = [];
+  state.started = false;
+
+  modbusList = [];
+
+  state.commPorts.forEach(() => {
+    addNewRuntime();
+  });
 }
 
 const mutations = {
@@ -194,18 +217,20 @@ const mutations = {
     const commPort = {
       config: null,
       slaves: [],
-      numRxFrame: 0,
-      numTxFrame: 0,
-      numRxBytes: 0,
-      numTxBytes: 0,
     };
 
     setCommPortConfig(commPort, 'tcp');
     state.commPorts.push(commPort);
+    addNewRuntime();
   },
-  COMM_PORT_DEL(s, commPort) {
+  COMM_PORT_DEL(_, commPort) {
     const ndx = state.commPorts.indexOf(commPort);
     state.commPorts.splice(ndx, 1);
+
+    if (modbusList[ndx] !== null) {
+      modbusList[ndx].close();
+    }
+    state.runtime.splice(ndx, 1);
   },
   COMM_PORT_CLEAR() {
     state.commPorts = [];
@@ -218,7 +243,7 @@ const mutations = {
    *   type: 'tcp' or 'rtu',
    * }
    */
-  COMM_UPDATE_TYPE(s, payload) {
+  COMM_UPDATE_TYPE(_, payload) {
     setCommPortConfig(payload.commPort, payload.type);
   },
   /**
@@ -230,7 +255,7 @@ const mutations = {
    *   value,
    * }
    */
-  COMM_UPDATE_COMM_PARAM(s, payload) {
+  COMM_UPDATE_COMM_PARAM(_, payload) {
     const { commPort } = payload;
 
     commPort.config.commParam[payload.name] = payload.value;
@@ -240,11 +265,13 @@ const mutations = {
   },
   NEW_PROJECT() {
     state.commPorts = [];
+    resetAndRebuildRuntime();
   },
-  LOAD_PROJECT(s, commPorts) {
+  LOAD_PROJECT(_, commPorts) {
     state.commPorts = commPorts;
+    resetAndRebuildRuntime();
   },
-  START_COMM_PORT(s, payload) {
+  START_COMM_PORT(_, payload) {
     const { port, ndx } = payload;
     let instance;
 
@@ -298,26 +325,26 @@ const mutations = {
         port: port.config.commParam.port,
       });
     }
-    state.runtime.modbus[ndx] = instance;
+    modbusList[ndx] = instance;
   },
-  STOP_COMM_PORT(s, payload) {
+  STOP_COMM_PORT(_, payload) {
     const { ndx } = payload;
 
-    state.runtime.modbus[ndx].close();
-    state.runtime.modbus[ndx] = null;
+    modbusList[ndx].close();
+    modbusList[ndx] = null;
   },
   SET_STARTED(s, v) {
-    state.runtime.started = v;
+    state.started = v;
   },
   RX_STAT(s, payload) {
-    const { port } = payload;
+    const { ndx } = payload;
 
-    port.numRxFrame += 1;
+    state.runtime[ndx].stats.numRxFrame += 1;
   },
   TX_STAT(s, payload) {
-    const { port } = payload;
+    const { ndx } = payload;
 
-    port.numTxFrame += 1;
+    state.runtime[ndx].stats.numTxFrame += 1;
   },
 };
 
@@ -392,19 +419,19 @@ const actions = {
     state.commPorts.forEach((port, ndx) => {
       context.commit('START_COMM_PORT', { port, ndx });
 
-      state.runtime.modbus[ndx].addListener('rx', (payload) => {
-        context.commit('RX_STAT', { port, frame: payload.frame });
+      modbusList[ndx].addListener('rx', (payload) => {
+        context.commit('RX_STAT', { ndx, frame: payload.frame });
       });
 
-      state.runtime.modbus[ndx].addListener('tx', (payload) => {
-        context.commit('TX_STAT', { port, frame: payload.frame });
+      modbusList[ndx].addListener('tx', (payload) => {
+        context.commit('TX_STAT', { ndx, frame: payload.frame });
       });
     });
     context.commit('SET_STARTED', true);
   },
   stopSlaves(context) {
     state.commPorts.forEach((port, ndx) => {
-      state.runtime.modbus[ndx].removeAllListeners();
+      modbusList[ndx].removeAllListeners();
       context.commit('STOP_COMM_PORT', { port, ndx });
     });
     context.commit('SET_STARTED', false);
@@ -432,8 +459,8 @@ const actions = {
 };
 
 const getters = {
-  commPorts(context) {
-    return context.commPorts;
+  commPorts() {
+    return state.commPorts;
   },
   commProtocols() {
     return ['rtu', 'tcp'];
@@ -454,7 +481,12 @@ const getters = {
     return serialStopbits;
   },
   runtimeStarted() {
-    return state.runtime.started;
+    return state.started;
+  },
+  commPortRuntime: () => (commPort) => {
+    const ndx = state.commPorts.indexOf(commPort);
+
+    return state.runtime[ndx];
   },
 };
 

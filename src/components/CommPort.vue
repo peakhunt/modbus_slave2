@@ -2,7 +2,11 @@
 <v-card dark class="elevation-12">
   <v-toolbar>
     <v-toolbar-title class="text-uppercase">
-      {{commPort.config.type}} &nbsp; {{ commPort.config.commParam.port }} &nbsp; {{commPort.numRxFrame}} / {{commPort.numTxFrame}}
+      {{commPort.config.type}} &nbsp; {{ commPort.config.commParam.port }}
+      &nbsp;
+      {{commPortRuntime(commPort).stats.numRxFrame}}
+      /
+      {{commPortRuntime(commPort).stats.numTxFrame}}
     </v-toolbar-title>
     <v-spacer/>
 
@@ -55,6 +59,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import CommPortConfig from './CommPortConfig.vue';
 import ModbusSlave from './ModbusSlave.vue';
 
@@ -63,6 +68,11 @@ export default {
   components: {
     CommPortConfig,
     ModbusSlave,
+  },
+  computed: {
+    ...mapGetters([
+      'commPortRuntime',
+    ]),
   },
   props: {
     commPort: { type: Object },
