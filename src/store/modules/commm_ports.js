@@ -134,7 +134,7 @@ function handleGetDiscreteInput(commPort, addr, unitID, cb) {
 }
 
 /* eslint-disable no-unused-vars */
-function handleSetRegister(commPort, addr, value, unitID, cb) {
+function handleSetRegister(context, commPort, addr, value, unitID, cb) {
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
@@ -149,13 +149,12 @@ function handleSetRegister(commPort, addr, value, unitID, cb) {
     return;
   }
 
-  // FIXME bug
-  reg.value = value;
+  context.commit('UPDATE_REG', { reg, value });
   cb();
 }
 
 /* eslint-disable no-unused-vars */
-function handleSetCoil(commPort, addr, value, unitID, cb) {
+function handleSetCoil(context, commPort, addr, value, unitID, cb) {
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
@@ -170,8 +169,7 @@ function handleSetCoil(commPort, addr, value, unitID, cb) {
     return;
   }
 
-  // FIXME bug
-  reg.value = value;
+  context.commit('UPDATE_REG', { reg, value });
   cb();
 }
 
@@ -272,7 +270,7 @@ const mutations = {
     resetAndRebuildRuntime();
   },
   START_COMM_PORT(_, payload) {
-    const { port, ndx } = payload;
+    const { context, port, ndx } = payload;
     let instance;
 
     const vector = {
@@ -294,11 +292,11 @@ const mutations = {
       },
       /* eslint-disable no-unused-vars */
       setRegister: (addr, value, unitID, cb) => {
-        handleSetRegister(port, addr, value, unitID, cb);
+        handleSetRegister(context, port, addr, value, unitID, cb);
       },
       /* eslint-disable no-unused-vars */
       setCoil: (addr, value, unitID, cb) => {
-        handleSetCoil(port, addr, value, unitID, cb);
+        handleSetCoil(context, port, addr, value, unitID, cb);
       },
     };
 
@@ -417,7 +415,7 @@ const actions = {
   },
   startSlaves(context) {
     state.commPorts.forEach((port, ndx) => {
-      context.commit('START_COMM_PORT', { port, ndx });
+      context.commit('START_COMM_PORT', { context, port, ndx });
 
       modbusList[ndx].addListener('rx', (payload) => {
         context.commit('RX_STAT', { ndx, frame: payload.frame });

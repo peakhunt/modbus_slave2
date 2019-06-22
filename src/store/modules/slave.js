@@ -58,6 +58,11 @@ const mutations = {
     // update register in registerList
     Vue.set(slave.registerList, ndx, reg);
   },
+  UPDATE_REG(_, payload) {
+    const { reg, value } = payload;
+
+    reg.value = value;
+  },
 };
 
 const actions = {
