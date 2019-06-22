@@ -394,7 +394,7 @@ const actions = {
         { name: 'MODBUS Slave Setting', extension: ['json'] },
       ],
     }, (filename) => {
-      jsonfile.writeFileSync(filename, state.commPorts, { spaces: 2 });
+      jsonfile.writeFileSync(filename, state.commPorts, { spaces: 2, EOL: '\n' });
     });
   },
   loadProject(context) {
@@ -404,7 +404,7 @@ const actions = {
         { name: 'MODBUS Slave Setting', extension: ['json'] },
       ],
     }, (filePaths) => {
-      jsonfile.readFile(filePaths[0], (err, json) => {
+      jsonfile.readFile(filePaths[0], { EOL: '\n' }, (err, json) => {
         if (err) {
           console.log(err);
           return;
