@@ -266,7 +266,7 @@ const mutations = {
     resetAndRebuildRuntime();
   },
   LOAD_PROJECT(_, commPorts) {
-    state.commPorts = commPorts;
+    Vue.set(state, 'commPorts', commPorts);
     resetAndRebuildRuntime();
   },
   START_COMM_PORT(_, payload) {
@@ -410,6 +410,11 @@ const actions = {
           return;
         }
         context.commit('LOAD_PROJECT', json);
+        state.commPorts.forEach((commPort) => {
+          commPort.slaves.forEach((slave) => {
+            context.commit('SLAVE_REBUILD_REG', slave);
+          });
+        });
       });
     });
   },

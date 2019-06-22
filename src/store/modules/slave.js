@@ -44,6 +44,13 @@ const mutations = {
     slave.registerList.splice(ndx, 1);
     Vue.delete(slave.registers[reg.type], reg.address);
   },
+  SLAVE_REBUILD_REG(_, slave) {
+    const s = slave;
+
+    s.registerList.forEach((reg) => {
+      s.registers[reg.type][reg.address] = reg;
+    });
+  },
   SLAVE_UPDATE_REG(s, payload) {
     const { slave, oldReg, newReg } = payload;
     const ndx = slave.registerList.indexOf(oldReg);
