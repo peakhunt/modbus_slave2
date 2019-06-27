@@ -22,3 +22,4 @@ Also it looks like we have to run electron-rebuild after fresh install.
 1. Serial Port List Probing
 2. Some final touches on UI
 3. Register list improvement for easier manipulation & visualization
+4. Better store structure for configuration and runtime.
