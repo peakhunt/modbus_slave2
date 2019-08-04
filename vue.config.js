@@ -1,7 +1,7 @@
 module.exports = {
-  configureWebpack: {
-    externals: {
-      serialport: "require('serialport')",
+  pluginOptions: {
+    electronBuilder: {
+      externals: ['serialport'],
     },
   },
 };
