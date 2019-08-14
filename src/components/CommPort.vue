@@ -4,9 +4,7 @@
     <v-toolbar-title class="text-uppercase">
       {{commPort.config.type}} &nbsp; {{ commPort.config.commParam.port }}
       &nbsp;
-      {{commPortRuntime(commPort).stats.numRxFrame}}
-      /
-      {{commPortRuntime(commPort).stats.numTxFrame}}
+      {{commPort.stat.numRx}}/{{commPort.stat.numTx}}
     </v-toolbar-title>
     <v-spacer/>
 
@@ -39,6 +37,8 @@
   >
    <v-tab v-for="(slave, ndx) in commPort.slaves" :key="ndx">
     Slave-{{slave.address}}
+    &nbsp;
+    {{slave.stat.numRx}}/{{slave.stat.numTx}}
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">

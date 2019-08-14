@@ -6,9 +6,17 @@
         "port": 10123
       }
     },
+    "stat": {
+      "numRx": 0,
+      "numTx": 0
+    },
     "slaves": [
       {
         "address": 8,
+        "stat": {
+          "numRx": 0,
+          "numTx": 0
+        },
         "registers": {
           "coil": {
             "2000": {
@@ -191,6 +199,10 @@
       },
       {
         "address": 9,
+        "stat": {
+          "numRx": 0,
+          "numTx": 0
+        },
         "registers": {
           "coil": {},
           "discrete": {

@@ -1,10 +1,5 @@
 import Vue from 'vue';
-import jsonfile from 'jsonfile';
-import ModbusTCP from 'modbus-servertcp';
-import ModbusRTU from 'modbus-serverrtu';
 import SerialPort from 'serialport';
-
-const { dialog } = require('electron').remote;
 
 const serialBauds = [9600, 19200, 38400, 57600, 115200];
 let serialPorts = [
@@ -48,187 +43,39 @@ function setCommPortConfig(commPort, type) {
   Vue.set(commPort, 'config', c);
 }
 
-function getSlaveFromCommPort(commPort, unitID) {
-  for (let i = 0; i < commPort.slaves.length; i += 1) {
-    if (commPort.slaves[i].address === unitID) {
-      return commPort.slaves[i];
-    }
-  }
-  return null;
-}
-
-/* eslint-disable no-unused-vars */
-function handleGetInputRegister(commPort, addr, unitID, cb) {
-  const slave = getSlaveFromCommPort(commPort, unitID);
-
-  if (slave === null) {
-    cb({ modbusErrorCode: 0x04 });
-    return;
-  }
-
-  const reg = slave.registers.input[addr];
-
-  if (reg === undefined) {
-    cb({ modbusErrorCode: 0x02 });
-    return;
-  }
-
-  cb(null, reg.value);
-}
-
-/* eslint-disable no-unused-vars */
-function handleGetHoldingRegister(commPort, addr, unitID, cb) {
-  const slave = getSlaveFromCommPort(commPort, unitID);
-
-  if (slave === null) {
-    cb({ modbusErrorCode: 0x04 });
-    return;
-  }
-
-  const reg = slave.registers.holding[addr];
-
-  if (reg === undefined) {
-    cb({ modbusErrorCode: 0x02 });
-    return;
-  }
-
-  cb(null, reg.value);
-}
-
-/* eslint-disable no-unused-vars */
-function handleGetCoil(commPort, addr, unitID, cb) {
-  const slave = getSlaveFromCommPort(commPort, unitID);
-
-  if (slave === null) {
-    cb({ modbusErrorCode: 0x04 });
-    return;
-  }
-
-  const reg = slave.registers.coil[addr];
-
-  if (reg === undefined) {
-    cb({ modbusErrorCode: 0x02 });
-    return;
-  }
-
-  cb(null, reg.value);
-}
-
-/* eslint-disable no-unused-vars */
-function handleGetDiscreteInput(commPort, addr, unitID, cb) {
-  const slave = getSlaveFromCommPort(commPort, unitID);
-
-  if (slave === null) {
-    cb({ modbusErrorCode: 0x04 });
-    return;
-  }
-
-  const reg = slave.registers.discrete[addr];
-
-  if (reg === undefined) {
-    cb({ modbusErrorCode: 0x02 });
-    return;
-  }
-
-  cb(null, reg.value);
-}
-
-/* eslint-disable no-unused-vars */
-function handleSetRegister(context, commPort, addr, value, unitID, cb) {
-  const slave = getSlaveFromCommPort(commPort, unitID);
-
-  if (slave === null) {
-    cb({ modbusErrorCode: 0x04 });
-    return;
-  }
-
-  const reg = slave.registers.holding[addr];
-
-  if (reg === undefined) {
-    cb({ modbusErrorCode: 0x02 });
-    return;
-  }
-
-  context.commit('UPDATE_REG', { reg, value });
-  cb();
-}
-
-/* eslint-disable no-unused-vars */
-function handleSetCoil(context, commPort, addr, value, unitID, cb) {
-  const slave = getSlaveFromCommPort(commPort, unitID);
-
-  if (slave === null) {
-    cb({ modbusErrorCode: 0x04 });
-    return;
-  }
-
-  const reg = slave.registers.coil[addr];
-
-  if (reg === undefined) {
-    cb({ modbusErrorCode: 0x02 });
-    return;
-  }
-
-  context.commit('UPDATE_REG', { reg, value });
-  cb();
-}
-
 const state = {
   commPorts: [],
-  runtime: [],
-  started: false,
 };
-
-let modbusList = [];
-
-
-function addNewRuntime() {
-  state.runtime.push({
-    stats: {
-      numRxFrame: 0,
-      numTxFrame: 0,
-      numRxBytes: 0,
-      numTxBytes: 0,
-    },
-  });
-}
-
-function resetAndRebuildRuntime() {
-  modbusList.forEach((m) => {
-    if (m !== null) {
-      m.close();
-    }
-  });
-
-  state.runtime = [];
-  state.started = false;
-
-  modbusList = [];
-
-  state.commPorts.forEach(() => {
-    addNewRuntime();
-  });
-}
 
 const mutations = {
   COMM_PORT_ADD() {
     const commPort = {
       config: null,
+      stat: {
+        numRx: 0,
+        numTx: 0,
+      },
       slaves: [],
     };
 
     setCommPortConfig(commPort, 'tcp');
     state.commPorts.push(commPort);
-    addNewRuntime();
   },
   COMM_PORT_DEL(_, commPort) {
     const ndx = state.commPorts.indexOf(commPort);
     state.commPorts.splice(ndx, 1);
+  },
+  COMM_PORT_INC_STAT(_, commPort) {
+    const c = commPort;
 
-    if (modbusList[ndx] !== null) {
-      modbusList[ndx].close();
-    }
-    state.runtime.splice(ndx, 1);
+    c.stat.numRx += 1;
+    c.stat.numTx += 1;
+  },
+  COMM_PORT_RESET_STAT(_, commPort) {
+    const c = commPort;
+
+    c.stat.numRx = 0;
+    c.stat.numTx = 0;
   },
   COMM_PORT_CLEAR() {
     state.commPorts = [];
@@ -261,88 +108,8 @@ const mutations = {
   UPDATE_COMM_PORT_LIST(_, portList) {
     serialPorts = portList;
   },
-  NEW_PROJECT() {
-    state.commPorts = [];
-    resetAndRebuildRuntime();
-  },
-  LOAD_PROJECT(_, commPorts) {
+  SET_COMMPORTS(_, commPorts) {
     Vue.set(state, 'commPorts', commPorts);
-    resetAndRebuildRuntime();
-  },
-  START_COMM_PORT(_, payload) {
-    const { context, port, ndx } = payload;
-    let instance;
-
-    const vector = {
-      /* eslint-disable no-unused-vars */
-      getInputRegister: (addr, unitID, cb) => {
-        handleGetInputRegister(port, addr, unitID, cb);
-      },
-      /* eslint-disable no-unused-vars */
-      getHoldingRegister: (addr, unitID, cb) => {
-        handleGetHoldingRegister(port, addr, unitID, cb);
-      },
-      /* eslint-disable no-unused-vars */
-      getCoil: (addr, unitID, cb) => {
-        handleGetCoil(port, addr, unitID, cb);
-      },
-      /* eslint-disable no-unused-vars */
-      getDiscreteInput: (addr, unitID, cb) => {
-        handleGetDiscreteInput(port, addr, unitID, cb);
-      },
-      /* eslint-disable no-unused-vars */
-      setRegister: (addr, value, unitID, cb) => {
-        handleSetRegister(context, port, addr, value, unitID, cb);
-      },
-      /* eslint-disable no-unused-vars */
-      setCoil: (addr, value, unitID, cb) => {
-        handleSetCoil(context, port, addr, value, unitID, cb);
-      },
-    };
-
-    if (port.config.type === 'rtu') {
-      const options = {
-        baudRate: port.config.commParam.baud,
-        dataBits: port.config.commParam.dataBit,
-        stopBits: port.config.commParam.stopBit,
-        parity: port.config.commParam.parity,
-        modbusRXTimeout: 500,
-      };
-
-      instance = new ModbusRTU(vector, port.config.commParam.port, options);
-      instance.open();
-    } else {
-      /*
-      instance = new modbus.ServerTCP(vector, {
-        host: '0.0.0.0',
-        port: port.config.commParam.port,
-      });
-      */
-      instance = new ModbusTCP(vector, {
-        host: '0.0.0.0',
-        port: port.config.commParam.port,
-      });
-    }
-    modbusList[ndx] = instance;
-  },
-  STOP_COMM_PORT(_, payload) {
-    const { ndx } = payload;
-
-    modbusList[ndx].close();
-    modbusList[ndx] = null;
-  },
-  SET_STARTED(s, v) {
-    state.started = v;
-  },
-  RX_STAT(s, payload) {
-    const { ndx } = payload;
-
-    state.runtime[ndx].stats.numRxFrame += 1;
-  },
-  TX_STAT(s, payload) {
-    const { ndx } = payload;
-
-    state.runtime[ndx].stats.numTxFrame += 1;
   },
 };
 
@@ -383,68 +150,6 @@ const actions = {
    */
   commPortClear(context) {
     context.commit('COMM_PORT_CLEAR');
-  },
-  newProject(context) {
-    context.commit('NEW_PROJECT');
-  },
-  saveProject() {
-    dialog.showSaveDialog({
-      title: 'Save Current Project',
-      filters: [
-        { name: 'MODBUS Slave Setting', extension: ['json'] },
-      ],
-    }, (filename) => {
-      if (filename === undefined) {
-        return;
-      }
-      jsonfile.writeFileSync(filename, state.commPorts, { spaces: 2, EOL: '\n' });
-    });
-  },
-  loadProject(context) {
-    dialog.showOpenDialog({
-      title: 'Load Project',
-      filters: [
-        { name: 'MODBUS Slave Setting', extension: ['json'] },
-      ],
-    }, (filePaths) => {
-      if (filePaths === undefined) {
-        return;
-      }
-
-      jsonfile.readFile(filePaths[0], { EOL: '\n' }, (err, json) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        context.commit('LOAD_PROJECT', json);
-        state.commPorts.forEach((commPort) => {
-          commPort.slaves.forEach((slave) => {
-            context.commit('SLAVE_REBUILD_REG', slave);
-          });
-        });
-      });
-    });
-  },
-  startSlaves(context) {
-    state.commPorts.forEach((port, ndx) => {
-      context.commit('START_COMM_PORT', { context, port, ndx });
-
-      modbusList[ndx].addListener('rx', (payload) => {
-        context.commit('RX_STAT', { ndx, frame: payload.frame });
-      });
-
-      modbusList[ndx].addListener('tx', (payload) => {
-        context.commit('TX_STAT', { ndx, frame: payload.frame });
-      });
-    });
-    context.commit('SET_STARTED', true);
-  },
-  stopSlaves(context) {
-    state.commPorts.forEach((port, ndx) => {
-      modbusList[ndx].removeAllListeners();
-      context.commit('STOP_COMM_PORT', { port, ndx });
-    });
-    context.commit('SET_STARTED', false);
   },
   refreshPortList(context, cb) {
     SerialPort.list((err, results) => {
@@ -489,14 +194,6 @@ const getters = {
   },
   commSerialStopbits() {
     return serialStopbits;
-  },
-  runtimeStarted() {
-    return state.started;
-  },
-  commPortRuntime: () => (commPort) => {
-    const ndx = state.commPorts.indexOf(commPort);
-
-    return state.runtime[ndx];
   },
 };
 

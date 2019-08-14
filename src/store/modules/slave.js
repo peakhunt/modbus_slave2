@@ -4,6 +4,10 @@ const mutations = {
   SLAVE_ADD_NEW(s, commPort) {
     const slave = {
       address: 0,
+      stat: {
+        numRx: 0,
+        numTx: 0,
+      },
       registers: {
         coil: {
         },
@@ -24,6 +28,18 @@ const mutations = {
     const ndx = commPort.slaves.indexOf(slave);
 
     commPort.slaves.splice(ndx, 1);
+  },
+  SLAVE_INC_STAT(_, slave) {
+    const s = slave;
+
+    s.stat.numRx += 1;
+    s.stat.numTx += 1;
+  },
+  SLAVE_RESET_STAT(_, slave) {
+    const s = slave;
+
+    s.stat.numRx = 0;
+    s.stat.numTx = 0;
   },
   SLAVE_UPDATE_ADDRESS(s, payload) {
     const { address, slave } = payload;
