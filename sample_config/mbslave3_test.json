@@ -7,15 +7,15 @@
       }
     },
     "stat": {
-      "numRx": 0,
-      "numTx": 0
+      "numRx": 1238,
+      "numTx": 1238
     },
     "slaves": [
       {
         "address": 8,
         "stat": {
-          "numRx": 0,
-          "numTx": 0
+          "numRx": 619,
+          "numTx": 619
         },
         "registers": {
           "coil": {
@@ -200,8 +200,8 @@
       {
         "address": 9,
         "stat": {
-          "numRx": 0,
-          "numTx": 0
+          "numRx": 619,
+          "numTx": 619
         },
         "registers": {
           "coil": {},
