@@ -1,20 +1,6 @@
 import jsonfile from 'jsonfile';
-import os from 'os';
 
 const { dialog } = require('electron').remote;
-
-function getJSONOpt() {
-  if (os.platform() === 'win32') {
-    return {
-      EOL: '\r\n',
-      spaces: 2,
-    };
-  }
-  return {
-    EOL: '\n',
-    spaces: 2,
-  };
-}
 
 const state = {
 };
@@ -34,7 +20,11 @@ const actions = {
       if (filename === undefined) {
         return;
       }
-      jsonfile.writeFileSync(filename, context.getters.commPorts, getJSONOpt());
+      jsonfile.writeFileSync(filename,
+        context.getters.commPorts, {
+          EOL: '\n',
+          spaces: 2,
+        });
     });
   },
   loadProject(context) {
@@ -48,7 +38,7 @@ const actions = {
         return;
       }
 
-      jsonfile.readFile(filePaths[0], getJSONOpt(), (err, json) => {
+      jsonfile.readFile(filePaths[0], {}, (err, json) => {
         if (err) {
           console.log(err);
           return;
