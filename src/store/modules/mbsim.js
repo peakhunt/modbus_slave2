@@ -14,16 +14,12 @@ function getSlaveFromCommPort(commPort, unitID) {
 
 /* eslint-disable no-unused-vars */
 function handleGetInputRegister(context, commPort, addr, unitID, cb) {
-  context.commit('COMM_PORT_INC_STAT', commPort);
-
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
     cb({ modbusErrorCode: 0x04 });
     return;
   }
-
-  context.commit('SLAVE_INC_STAT', slave);
 
   const reg = slave.registers.input[addr];
 
@@ -37,16 +33,12 @@ function handleGetInputRegister(context, commPort, addr, unitID, cb) {
 
 /* eslint-disable no-unused-vars */
 function handleGetHoldingRegister(context, commPort, addr, unitID, cb) {
-  context.commit('COMM_PORT_INC_STAT', commPort);
-
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
     cb({ modbusErrorCode: 0x04 });
     return;
   }
-
-  context.commit('SLAVE_INC_STAT', slave);
 
   const reg = slave.registers.holding[addr];
 
@@ -60,16 +52,12 @@ function handleGetHoldingRegister(context, commPort, addr, unitID, cb) {
 
 /* eslint-disable no-unused-vars */
 function handleGetCoil(context, commPort, addr, unitID, cb) {
-  context.commit('COMM_PORT_INC_STAT', commPort);
-
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
     cb({ modbusErrorCode: 0x04 });
     return;
   }
-
-  context.commit('SLAVE_INC_STAT', slave);
 
   const reg = slave.registers.coil[addr];
 
@@ -83,16 +71,12 @@ function handleGetCoil(context, commPort, addr, unitID, cb) {
 
 /* eslint-disable no-unused-vars */
 function handleGetDiscreteInput(context, commPort, addr, unitID, cb) {
-  context.commit('COMM_PORT_INC_STAT', commPort);
-
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
     cb({ modbusErrorCode: 0x04 });
     return;
   }
-
-  context.commit('SLAVE_INC_STAT', slave);
 
   const reg = slave.registers.discrete[addr];
 
@@ -106,16 +90,12 @@ function handleGetDiscreteInput(context, commPort, addr, unitID, cb) {
 
 /* eslint-disable no-unused-vars */
 function handleSetRegister(context, commPort, addr, value, unitID, cb) {
-  context.commit('COMM_PORT_INC_STAT', commPort);
-
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
     cb({ modbusErrorCode: 0x04 });
     return;
   }
-
-  context.commit('SLAVE_INC_STAT', slave);
 
   const reg = slave.registers.holding[addr];
 
@@ -130,16 +110,12 @@ function handleSetRegister(context, commPort, addr, value, unitID, cb) {
 
 /* eslint-disable no-unused-vars */
 function handleSetCoil(context, commPort, addr, value, unitID, cb) {
-  context.commit('COMM_PORT_INC_STAT', commPort);
-
   const slave = getSlaveFromCommPort(commPort, unitID);
 
   if (slave === null) {
     cb({ modbusErrorCode: 0x04 });
     return;
   }
-
-  context.commit('SLAVE_INC_STAT', slave);
 
   const reg = slave.registers.coil[addr];
 
@@ -150,6 +126,44 @@ function handleSetCoil(context, commPort, addr, value, unitID, cb) {
 
   context.commit('UPDATE_REG', { reg, value });
   cb();
+}
+
+function handleRxFrameEvent(context, port, payload) {
+  const { frame } = payload;
+  let ndx;
+
+  context.commit('COMM_PORT_INC_STAT', { c: port, item: 'numRx' });
+
+  if (port.config.type === 'rtu') {
+    ndx = 0;
+  } else {
+    ndx = 6;
+  }
+
+  const slave = getSlaveFromCommPort(port, frame[ndx]);
+
+  if (slave !== null) {
+    context.commit('SLAVE_INC_STAT', { s: slave, item: 'numRx' });
+  }
+}
+
+function handleTxFrameEvent(context, port, payload) {
+  const { frame } = payload;
+  let ndx;
+
+  context.commit('COMM_PORT_INC_STAT', { c: port, item: 'numTx' });
+
+  if (port.config.type === 'rtu') {
+    ndx = 0;
+  } else {
+    ndx = 6;
+  }
+
+  const slave = getSlaveFromCommPort(port, frame[ndx]);
+
+  if (slave !== null) {
+    context.commit('SLAVE_INC_STAT', { s: slave, item: 'numTx' });
+  }
 }
 
 const state = {
@@ -220,10 +234,23 @@ const mutations = {
       });
     }
     modbusList[ndx] = instance;
+
+    if (instance !== null) {
+      instance.on('rx', (p) => {
+        handleRxFrameEvent(context, port, p);
+      });
+
+      instance.on('tx', (p) => {
+        handleTxFrameEvent(context, port, p);
+      });
+    }
   },
   STOP_MODBUS(_, payload) {
     const { ndx } = payload;
 
+    if (modbusList[ndx] !== null) {
+      modbusList[ndx].removeAllListeners();
+    }
     modbusList[ndx].close();
     modbusList[ndx] = null;
   },

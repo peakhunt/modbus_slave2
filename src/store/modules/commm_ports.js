@@ -65,11 +65,10 @@ const mutations = {
     const ndx = state.commPorts.indexOf(commPort);
     state.commPorts.splice(ndx, 1);
   },
-  COMM_PORT_INC_STAT(_, commPort) {
-    const c = commPort;
+  COMM_PORT_INC_STAT(_, payload) {
+    const { c, item } = payload;
 
-    c.stat.numRx += 1;
-    c.stat.numTx += 1;
+    c.stat[item] += 1;
   },
   COMM_PORT_RESET_STAT(_, commPort) {
     const c = commPort;

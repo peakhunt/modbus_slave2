@@ -249,6 +249,8 @@ var ServerTCP = function(vector, options) {
                 if(recvBuffer.length - MBAP_LEN < pduLen)
                     break;
 
+                modbus.emit("rx", { modbus, frame:recvBuffer });
+
                 // remove mbap and add crc16
                 var requestBuffer = Buffer.alloc(pduLen + 2);
                 recvBuffer.copy(requestBuffer, 0, MBAP_LEN, MBAP_LEN + pduLen);
@@ -261,7 +263,6 @@ var ServerTCP = function(vector, options) {
 
                 modbusSerialDebug({ action: "receive", data: requestBuffer, requestBufferLength: requestBuffer.length });
                 modbusSerialDebug(JSON.stringify({ action: "receive", data: requestBuffer }));
-                modbus.emit("rx", { modbus, frame: requestBuffer });
 
                 var sockWriter = function(err, responseBuffer) {
                     if (err) {
@@ -280,7 +281,7 @@ var ServerTCP = function(vector, options) {
 
                         modbusSerialDebug({ action: "send", data: responseBuffer });
                         modbusSerialDebug(JSON.stringify({ action: "send string", data: responseBuffer }));
-                        modbus.emit("tx", { modbus, frame: responseBuffer });
+                        modbus.emit("tx", { modbus, frame: outTcp });
 
                         // write to port
                         sock.write(outTcp);

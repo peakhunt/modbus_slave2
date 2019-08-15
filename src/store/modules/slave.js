@@ -29,11 +29,10 @@ const mutations = {
 
     commPort.slaves.splice(ndx, 1);
   },
-  SLAVE_INC_STAT(_, slave) {
-    const s = slave;
+  SLAVE_INC_STAT(_, payload) {
+    const { s, item } = payload;
 
-    s.stat.numRx += 1;
-    s.stat.numTx += 1;
+    s.stat[item] += 1;
   },
   SLAVE_RESET_STAT(_, slave) {
     const s = slave;
