@@ -1,3 +1,4 @@
+import 'typeface-roboto/index.css';
 import Vue from 'vue';
 import './plugins/vuetify';
 import App from './App.vue';
