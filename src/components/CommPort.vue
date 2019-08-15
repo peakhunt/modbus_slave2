@@ -12,7 +12,7 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn flat icon v-on="on" @click="onNewSlave">
-            <v-icon>add</v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
         <span>Add New Slave</span>
@@ -21,7 +21,7 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn flat icon v-on="on" @click="onDelCommPort">
-            <v-icon>clear</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
         <span>Delete Comm Port</span>
@@ -43,7 +43,7 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
         <v-btn flat icon v-on="on" @click="onDelSlave(slave)">
-          <v-icon>clear</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
       <span>Delete slave</span>

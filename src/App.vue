@@ -10,7 +10,7 @@
       <v-tooltip bottom v-if="!runtimeStarted">
         <template #activator="data">
           <v-btn icon v-on="data.on" @click="onStartSlave">
-            <v-icon large>play_arrow</v-icon>
+            <v-icon large>mdi-play</v-icon>
           </v-btn>
         </template>
         <span>Start Slave</span>
@@ -19,7 +19,7 @@
       <v-tooltip bottom v-if="runtimeStarted">
         <template #activator="data">
           <v-btn icon v-on="data.on" @click="onStopSlave">
-            <v-icon large>pause</v-icon>
+            <v-icon large>mdi-pause</v-icon>
           </v-btn>
         </template>
         <span>Stop Slave</span>
@@ -28,7 +28,7 @@
       <v-tooltip bottom>
         <template #activator="data">
           <v-btn icon v-on="data.on" @click="onNewCommPort">
-            <v-icon large>add</v-icon>
+            <v-icon large>mdi-plus</v-icon>
           </v-btn>
         </template>
         <span>New Communication Port</span>
@@ -37,7 +37,7 @@
       <v-tooltip bottom v-if="!runtimeStarted">
         <template #activator="data">
           <v-btn icon v-on="data.on" @click="onScanCommPorts">
-            <v-icon large>refresh</v-icon>
+            <v-icon large>mdi-refresh</v-icon>
           </v-btn>
         </template>
         <span>Scan Comm Ports</span>

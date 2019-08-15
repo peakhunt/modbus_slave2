@@ -86,8 +86,8 @@
             <td>{{ props.item.value }}</td>
 
             <td>
-              <v-icon small class="mr-2" @click="onEditRegister(props.item)"> edit </v-icon>
-              <v-icon small @click="onDelRegister(props.item)"> delete </v-icon>
+              <v-icon small class="mr-2" @click="onEditRegister(props.item)"> mdi-pencil </v-icon>
+              <v-icon small @click="onDelRegister(props.item)"> mdi-delete </v-icon>
             </td>
           </template>
         </v-data-table>
