@@ -2,11 +2,6 @@ import Vue from 'vue';
 import SerialPort from 'serialport';
 
 const serialBauds = [9600, 19200, 38400, 57600, 115200];
-let serialPorts = [
-  '/dev/ttyUSB0',
-  '/dev/ttyUSB1',
-  '/dev/ttyUSB2',
-];
 const serialParities = [
   'none',
   'even',
@@ -18,6 +13,11 @@ const serialDatabits = [5, 6, 7, 8];
 const serialStopbits = [1, 2];
 const tcpDefaultPort = 10123;
 
+const state = {
+  commPorts: [],
+  portList: [],
+};
+
 function setCommPortConfig(commPort, type) {
   let c;
 
@@ -25,7 +25,7 @@ function setCommPortConfig(commPort, type) {
     c = {
       type: 'rtu',
       commParam: {
-        port: serialPorts[0] || 'No Comm Port',
+        port: state.portList[0] || 'No Comm Port',
         baud: serialBauds[0],
         parity: serialParities[0],
         dataBit: serialDatabits[3],
@@ -42,10 +42,6 @@ function setCommPortConfig(commPort, type) {
   }
   Vue.set(commPort, 'config', c);
 }
-
-const state = {
-  commPorts: [],
-};
 
 const mutations = {
   COMM_PORT_ADD() {
@@ -105,7 +101,7 @@ const mutations = {
     commPort.config.commParam[payload.name] = payload.value;
   },
   UPDATE_COMM_PORT_LIST(_, portList) {
-    serialPorts = portList;
+    state.portList = portList;
   },
   SET_COMMPORTS(_, commPorts) {
     Vue.set(state, 'commPorts', commPorts);
@@ -160,7 +156,6 @@ const actions = {
       const portList = [];
 
       results.forEach((port) => {
-        console.log(`port ${port.comName}`);
         portList.push(port.comName);
       });
       context.commit('UPDATE_COMM_PORT_LIST', portList);
@@ -183,7 +178,7 @@ const getters = {
     return serialBauds;
   },
   commSerialPorts() {
-    return serialPorts;
+    return state.portList;
   },
   commSerialParities() {
     return serialParities;

@@ -58,6 +58,27 @@
     <v-content>
       <ModbusSlaveSim/>
     </v-content>
+
+    <v-dialog max-width="50%" persistent
+              v-model="portRefreshDlg.show"
+              hide-overlay>
+      <v-card color="primary">
+        <v-card-text>
+          <v-container fluid grid-list-lg>
+            <v-layout row wrap justify-center>
+              Updating Port List
+            </v-layout>
+            <v-divider/>
+            <v-layout row wrap justify-center>
+              <v-progress-circular :size="50"
+                                   color="green"
+                                   indeterminate
+              />
+            </v-layout>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -77,7 +98,9 @@ export default {
   },
   data() {
     return {
-      //
+      portRefreshDlg: {
+        show: false,
+      },
     };
   },
   methods: {
@@ -100,8 +123,16 @@ export default {
       this.$store.dispatch('loadProject');
     },
     onScanCommPorts() {
-      this.$store.dispatch('refreshPortList');
+      this.portRefreshDlg.show = true;
+      this.$store.dispatch('refreshPortList', () => {
+        setTimeout(() => {
+          this.portRefreshDlg.show = false;
+        }, 1000);
+      });
     },
+  },
+  mounted() {
+    this.onScanCommPorts();
   },
 };
 </script>
