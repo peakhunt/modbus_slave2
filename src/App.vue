@@ -27,16 +27,16 @@
 
       <v-tooltip bottom>
         <template #activator="data">
-          <v-btn icon v-on="data.on" @click="onNewCommPort">
+          <v-btn icon v-on="data.on" @click="onNewCommPort" :disabled="runtimeStarted">
             <v-icon large>mdi-plus</v-icon>
           </v-btn>
         </template>
         <span>New Communication Port</span>
       </v-tooltip>
 
-      <v-tooltip bottom v-if="!runtimeStarted">
+      <v-tooltip bottom>
         <template #activator="data">
-          <v-btn icon v-on="data.on" @click="onScanCommPorts">
+          <v-btn icon v-on="data.on" @click="onScanCommPorts" :disabled="runtimeStarted">
             <v-icon large>mdi-refresh</v-icon>
           </v-btn>
         </template>

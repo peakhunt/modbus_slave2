@@ -11,7 +11,7 @@
     <v-toolbar-items>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn flat icon v-on="on" @click="onNewSlave">
+          <v-btn flat icon v-on="on" @click="onNewSlave" :disabled="runtimeStarted">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
@@ -20,7 +20,7 @@
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn flat icon v-on="on" @click="onDelCommPort">
+          <v-btn flat icon v-on="on" @click="onDelCommPort" :disabled="runtimeStarted">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
@@ -42,7 +42,7 @@
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn flat icon v-on="on" @click="onDelSlave(slave)">
+        <v-btn flat icon v-on="on" @click="onDelSlave(slave)" :disabled="runtimeStarted">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'commPortRuntime',
+      'runtimeStarted',
     ]),
   },
   props: {

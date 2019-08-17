@@ -87,7 +87,8 @@
 
             <td>
               <v-icon small class="mr-2" @click="onEditRegister(props.item)"> mdi-pencil </v-icon>
-              <v-icon small @click="onDelRegister(props.item)"> mdi-delete </v-icon>
+              <v-icon small @click="onDelRegister(props.item)"
+                            :disabled="runtimeStarted"> mdi-delete </v-icon>
             </td>
           </template>
         </v-data-table>
@@ -99,12 +100,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'ModbusSlave',
   props: {
     slave: { type: Object },
   },
   computed: {
+    ...mapGetters([
+      'runtimeStarted',
+    ]),
     slaveAddress: {
       get() {
         return this.slave.address;
