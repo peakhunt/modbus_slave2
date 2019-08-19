@@ -1,7 +1,25 @@
 import ModbusTCP from 'modbus-servertcp';
 import ModbusRTU from 'modbus-serverrtu';
 
+const MAX_NUM_FRAMES = 100;
+
 let modbusList = [];
+
+function bufferToString(buffer) {
+  let frame = '';
+
+  buffer.forEach((b) => {
+    // eslint-disable-next-line no-bitwise
+    const unsignedByte = b & 0xff;
+
+    if (unsignedByte < 16) {
+      frame += `0${unsignedByte.toString(16)} `;
+    } else {
+      frame += `${unsignedByte.toString(16)} `;
+    }
+  });
+  return frame;
+}
 
 function getSlaveFromCommPort(commPort, unitID) {
   for (let i = 0; i < commPort.slaves.length; i += 1) {
@@ -133,6 +151,7 @@ function handleRxFrameEvent(context, port, payload) {
   let ndx;
 
   context.commit('COMM_PORT_INC_STAT', { c: port, item: 'numRx' });
+  context.commit('ADD_FRAME', { type: 'rx', port, frame: bufferToString(frame) });
 
   if (port.config.type === 'rtu') {
     ndx = 0;
@@ -152,6 +171,7 @@ function handleTxFrameEvent(context, port, payload) {
   let ndx;
 
   context.commit('COMM_PORT_INC_STAT', { c: port, item: 'numTx' });
+  context.commit('ADD_FRAME', { type: 'tx', port, frame: bufferToString(frame) });
 
   if (port.config.type === 'rtu') {
     ndx = 0;
@@ -168,6 +188,7 @@ function handleTxFrameEvent(context, port, payload) {
 
 const state = {
   started: false,
+  frames: [],
 };
 
 const mutations = {
@@ -179,6 +200,7 @@ const mutations = {
     });
 
     state.started = false;
+    state.frames = [];
 
     modbusList = [];
   },
@@ -254,6 +276,12 @@ const mutations = {
     modbusList[ndx].close();
     modbusList[ndx] = null;
   },
+  ADD_FRAME(_, payload) {
+    state.frames.unshift(payload);
+    if (state.frames.length > MAX_NUM_FRAMES) {
+      state.frames.pop();
+    }
+  },
 };
 
 const actions = {
@@ -275,6 +303,9 @@ const actions = {
 const getters = {
   runtimeStarted() {
     return state.started;
+  },
+  frames() {
+    return state.frames;
   },
 };
 

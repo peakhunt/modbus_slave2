@@ -52,6 +52,9 @@
       <v-btn flat @click="onLoadProject">
         <span class="mr-2">Load</span>
       </v-btn>
+      <v-btn flat @click="showFrameTracer = true">
+        <span class="mr-2">Trace</span>
+      </v-btn>
 
     </v-toolbar>
 
@@ -79,17 +82,21 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <FrameTracer :show="showFrameTracer" @close="showFrameTracer = false"/>
   </v-app>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import ModbusSlaveSim from './components/ModbusSlaveSim.vue';
+import FrameTracer from './components/FrameTracer.vue';
 
 export default {
   name: 'App',
   components: {
     ModbusSlaveSim,
+    FrameTracer,
   },
   computed: {
     ...mapGetters([
@@ -101,6 +108,7 @@ export default {
       portRefreshDlg: {
         show: false,
       },
+      showFrameTracer: false,
     };
   },
   methods: {
