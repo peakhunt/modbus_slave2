@@ -14,7 +14,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^2.6.5",
-    "electron": "^5.0.4",
+    "electron": "^9.1.0",
     "jsonfile": "^5.0.0",
     "modbus-serial": "^7.6.0",
     "modbus-serverrtu": "file:local_modules/modbus-serverrtu",
